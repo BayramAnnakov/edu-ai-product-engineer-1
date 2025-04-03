@@ -1,0 +1,4 @@
+nltk
+openai
+python-dotenv
+openai-agents
