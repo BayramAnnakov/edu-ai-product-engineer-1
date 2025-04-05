@@ -1,0 +1,16 @@
+nltk
+openai
+python-dotenv
+pandas
+numpy
+matplotlib
+regex
+tiktoken
+
+openai-agents
+crewai
+
+langchain
+langchain_core
+langchain_openai
+langgraph
