@@ -1,0 +1,9 @@
+nltk
+openai
+pandas
+numpy
+rouge
+python-dotenv
+matplotlib
+tqdm
+scipy
