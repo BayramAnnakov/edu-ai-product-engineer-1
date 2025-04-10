@@ -1,0 +1,42 @@
+Below is a structured comparison of the EXTRACTIVE SUMMARY and the ABSTRACTIVE SUMMARY based on completeness, accuracy, readability, and usefulness, followed by a final recommendation.
+
+1. COMPLETENESS
+• Extractive Summary: 
+  - Provides direct quotes from the user reviews, such as “Benutze die App seit 2 Jahren…” and “Versandkosten sind zu hoch.” This ensures the original sentiment is captured verbatim. However, it might miss some overarching themes or connections between individual comments because it mostly lists discrete statements without combining them into broader insights. 
+  - Example: The comment about deleting the app and seeking an alternative is present verbatim, showing an actual user’s frustration toward the end of their experience. But no explicit summary of why some users consider alternatives (aside from that single mention) is offered.
+• Abstractive Summary: 
+  - Sums up the reviews into clear thematic points: positive feedback about long-term use and daily check-ins, negative concerns about shipping costs, lack of search function, and frustration over transaction fees or premium sections. 
+  - Connects the high shipping costs, technical issues, and lack of a search function under the umbrella of “significant areas for improvement,” showing a cohesive view of user pain points and recurring problems. 
+
+Overall, the abstractive summary appears more comprehensive in capturing the core discussion topics across multiple reviews, whereas the extractive summary, although it includes original quotes, might leave out a generalized interpretation or unifying perspective.
+
+2. ACCURACY
+• Extractive Summary:
+  - Because it uses direct quotes, it is highly accurate to the original text in a literal sense. Readers can see what users actually said without the risk of misinterpretation. 
+  - However, it can suffer from being disjointed, and readers might not see clear, synthesized interpretations of certain points.
+• Abstractive Summary:
+  - Interprets and combines user feedback into overarching statements. There is a risk of potential omission of nuances or misrepresenting the sentiment if not carefully done. 
+  - In the provided text, the overall user sentiments (positive long-term experience, negative remarks about shipping, search function, and technical issues) are represented well and generally align with the original reviews. The summary does not appear to introduce inaccuracies.
+
+In terms of factual correctness, the extractive summary is literally correct but less organized, while the abstractive summary faithfully represents the main points without apparent distortion.
+
+3. READABILITY
+• Extractive Summary:
+  - Contains multiple direct quotes that can feel fragmented. New readers might have to piece together the themes themselves. 
+  - Users might find it more difficult to derive major themes immediately since they have to interpret each quote on their own.
+• Abstractive Summary:
+  - Organized and cohesive, making it easier to follow the logic behind user sentiments. 
+  - Summarizes issues (like “lack of a search function” or “shipping costs”) under a single narrative, making it very clear what the main points are.
+
+The abstractive approach offers better flow and clarity, helping readers quickly grasp the essence of the feedback.
+
+4. USEFULNESS
+• Extractive Summary:
+  - Useful when the developer needs the exact quotes to illustrate the raw voices of users. This could be important if they want to cite direct feedback or see user phrasing.
+  - Less useful for a quick overview or planning improvements because it does not explicitly categorize complaints or positives in a structured format.
+• Abstractive Summary:
+  - Extremely useful for decision-making since all major points of praise and criticism are grouped clearly. 
+  - More practical when developers want a concise overview of priorities (such as shipping costs, difficulties with returns, or missing features like search), making it easier to brainstorm focused action items.
+
+FINAL RECOMMENDATION
+Both summaries have value, but the ABSTRACTIVE SUMMARY is overall more effective because it combines the user feedback into coherent themes, making it easier to understand, more complete in its coverage of recurring issues, and simpler for developers to act upon. While the EXTRACTIVE SUMMARY is best when direct user quotes are necessary, the ABSTRACTIVE SUMMARY is likely to be the more powerful tool for quickly pinpointing app improvements and user satisfaction issues.

@@ -1,0 +1,25 @@
+# Core dependencies
+crewai
+typer[all]
+python-dotenv
+
+# NLP libraries for extractive summarization
+nltk
+scikit-learn
+networkx
+
+# Configuration 
+pyyaml
+
+# Rich CLI
+rich
+
+# API clients
+openai
+# appbot-client is installed from local directory
+
+# Development
+pytest
+black
+isort
+flake8

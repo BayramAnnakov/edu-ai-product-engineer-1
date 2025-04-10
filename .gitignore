@@ -68,3 +68,13 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk 
+results/
+
+# Ignore all files from macos operating system
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+
