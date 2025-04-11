@@ -67,4 +67,8 @@ Icon
 .AppleDesktop
 Network Trash Folder
 Temporary Items
-.apdisk 
+.apdisk
+
+# Data files
+Vladimir_Kovtunovskiy/Reviews.csv
+*.csv 

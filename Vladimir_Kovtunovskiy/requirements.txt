@@ -1,0 +1,9 @@
+pandas
+langchain
+langchain-core
+langchain-openai
+langgraph
+loguru
+openai
+nltk
+python-dotenv
