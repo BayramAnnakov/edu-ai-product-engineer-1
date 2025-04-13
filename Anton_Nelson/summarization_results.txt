@@ -1,0 +1,49 @@
+Original Article Length: 457 words
+
+=== Extractive Summary (NLTK) ===
+In the early days of the personal computer, every computer manufacturer needed software engineers who could write low-level drivers that performed the work of reading and writing to memory boards, hard disks, and peripherals such as modems and printers. Windows and macOS, and for mobile, iOS and Android, mean that today, most programmers no longer need to know much of what earlier generations of programmers knew. They were succeeded by programmers writing machine instructions as binary code to be input one bit at a time by flipping switches on the front of a computer. That bag of drivers, fronted by the Win32 APIs, meant that programmers no longer needed to write low-level code to control the machine. Then, development of even higher-level compiled languages like Fortran, COBOL, and their successors C, C++, and Java meant that most programmers no longer wrote assembly code.
+
+Extractive Summary Length: 143 words
+
+=== Abstractive Summary (OpenAI) ===
+The article discusses the evolution of programming languages and the impact of various technological advancements on the field of software development. It highlights how different programming languages and tools have made programming more accessible and efficient over time, from low-level machine instructions to high-level languages like Java. The article also emphasizes how consumer operating systems like Windows have simplified programming tasks by encapsulating low-level functionalities. Despite these changes, there has been an increase in the number of programmers and a growing demand for software solutions.
+
+Abstractive Summary Length: 85 words
+
+=== COMPARISON REPORT ===
+
+=== COMPARISON REPORT ===
+
+1. LENGTH ANALYSIS:
+   - Original text: 457 words
+   - Extractive summary: 143 words (compression: 68.7%)
+   - Abstractive summary: 85 words (compression: 81.4%)
+
+2. CONTENT ANALYSIS:
+   - Extractive summary coverage: 18.5% of original sentences
+   - Similarity between summaries: 2.3%
+
+3. APPROACH CHARACTERISTICS:
+   Extractive Summary:
+   - Uses exact sentences from the original text
+   - Preserves original wording and structure
+   - More detailed but potentially less concise
+   - Better for technical content preservation
+   
+   Abstractive Summary:
+   - Generates new sentences and phrasing
+   - More concise and natural language
+   - Better at capturing main ideas and themes
+   - May include inferred information
+
+4. RECOMMENDATIONS:
+   - Use extractive summarization when:
+     * Preserving exact wording is important
+     * Technical accuracy is crucial
+     * Original sentence structure should be maintained
+   
+   - Use abstractive summarization when:
+     * Conciseness is a priority
+     * Natural language flow is important
+     * Main ideas need to be synthesized
+     * General audience understanding is the goal
