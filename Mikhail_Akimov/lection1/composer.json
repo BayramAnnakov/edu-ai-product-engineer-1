@@ -1,0 +1,19 @@
+{
+    "require": {
+        "php": ">=8.0",
+        "openai-php/client": "^0.8.0",
+        "symfony/http-client": "^7.2",
+        "nyholm/psr7": "^1.8",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TextSummarizer\\": "app/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
