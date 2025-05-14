@@ -12,25 +12,29 @@ def get_article_text(file_path: str) -> str:
         return ""
 
 
-def get_reviews_from_csv(csv_path: str, num_rows: int = 5) -> str:
+def get_reviews_from_csv(csv_path: str, review_column: str = "Text", num_rows=None, product_id=None) -> str:
     """Read reviews from a CSV file and return them as a formatted string.
     
     Args:
         csv_path: Path to the CSV file.
-        num_rows: Number of rows to read (default: 5).
+        num_rows: Number of rows to read (default: None, which means all rows).
+        product_id: If provided, only reviews for this ProductId will be included.
         
     Returns:
         A formatted string of reviews or an error message.
     """
     try:
-        # Try to read the CSV with only num_rows
-        df = pd.read_csv(csv_path, nrows=num_rows)
+        df = pd.read_csv(csv_path)
+        if product_id is not None:
+            df = df[df['ProductId'] == product_id]
+        if num_rows is not None:
+            df = df.head(num_rows)
         if df.empty:
             return "No reviews found in the CSV file."
 
-        # Check if "Text" column exists, otherwise find the first text-based column
-        if "Text" in df.columns:
-            review_column = "Text"
+        # Check if review_column exists, otherwise find the first text-based column
+        if review_column in df.columns:
+            review_column = review_column
         else:
             # Select first non-numeric column as a fallback
             text_columns = df.select_dtypes(include=['object', 'string']).columns
@@ -53,7 +57,7 @@ def get_reviews_from_csv(csv_path: str, num_rows: int = 5) -> str:
         return combined_text
     except Exception as e:
         return f"Error reading CSV file: {e}"
-
+        
 
 def get_metrics(text: str) -> Dict[str, float]:
     """Calculate text metrics."""

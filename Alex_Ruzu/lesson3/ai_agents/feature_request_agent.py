@@ -1,6 +1,7 @@
 from agents import Agent, Runner, function_tool
 import pandas as pd
 import asyncio
+import json
 
 from dotenv import load_dotenv
 import os
@@ -9,9 +10,10 @@ import os
 load_dotenv()
 
 @function_tool
-def print_hello_feature_request():
+def print_hello_feature_request(review_text: str):
     print("Creating Jira Feature Request...")
-    return '{"classification": "feature"}'
+    print(f"Feature request review: {review_text}")
+    return json.dumps({"classification": "feature", "result": review_text})
 
 
 feature_request_agent = Agent(

@@ -47,14 +47,14 @@ async def cleanup():
             pass
 
 async def main():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    samples_dir = os.path.join(current_dir, "sample_files")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_DIR = os.path.join(BASE_DIR, "..", "data")  # Adjust as needed
 
     async with MCPServerStdio(
         name="Filesystem Server, via npx",
         params={
             "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-filesystem", samples_dir],
+            "args": ["-y", "@modelcontextprotocol/server-filesystem", DATA_DIR],
         },
     ) as server:
         trace_id = gen_trace_id()

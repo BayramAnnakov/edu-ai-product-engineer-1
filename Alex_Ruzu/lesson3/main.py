@@ -3,7 +3,7 @@ from agents import Agent, function_tool, Runner
 import pandas as pd
 import asyncio
 
-from my_agents.triage_agent import triage_agent
+from ai_agents.triage_agent import triage_agent
 from dotenv import load_dotenv
 import os
 import json
@@ -19,7 +19,6 @@ def load_reviews(csv_path, review_column="content", num_rows=None):
 async def classify_review(review):
     # Use the triage agent to classify the review
     result = await Runner.run(triage_agent, review)
-    #print("Final output:", result.final_output)
 
     # Try to extract the classification from the agent's output
     output = (result.final_output or "").strip().lower()
@@ -28,7 +27,6 @@ async def classify_review(review):
     except Exception:
         classification = "other"
 
-    print("DEBUG: final_output =", repr(result.final_output))
     return classification
 
 
@@ -42,13 +40,14 @@ async def main():
         print(f"Error: File '{csv_path}' not found.")
         return
     
-    reviews = load_reviews(csv_path, review_column=review_column, num_rows=5)
+    reviews = load_reviews(csv_path, review_column=review_column, num_rows=15)
     print(f"Loaded {len(reviews)} reviews")
 
     for idx, review in enumerate(reviews, 1):
-        print(f"Review #{idx}: {review}")
+        #print(f"Review #{idx}: {review}")
+        print(f"Review #{idx}:")
         classification = await classify_review(review)
-        print(f"Classification in main(): {classification}\n")
+        print(f"Classification: {classification}\n")
 
 
 if __name__ == "__main__":

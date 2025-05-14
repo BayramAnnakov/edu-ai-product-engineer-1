@@ -2,8 +2,8 @@ from agents import Agent, Runner, handoff
 import pandas as pd
 import asyncio
 
-from my_agents.bug_report_agent import bug_report_agent
-from my_agents.feature_request_agent import feature_request_agent
+from ai_agents.bug_report_agent import bug_report_agent
+from ai_agents.feature_request_agent import feature_request_agent
 from dotenv import load_dotenv
 import os
 

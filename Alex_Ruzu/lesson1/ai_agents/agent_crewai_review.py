@@ -70,7 +70,7 @@ async def main():
     load_dotenv()
 
     # Path to the CSV file
-    csv_path = "Reviews.csv"
+    csv_path = "data/reviews.csv"
     
     # Check if the file exists
     if not os.path.exists(csv_path):

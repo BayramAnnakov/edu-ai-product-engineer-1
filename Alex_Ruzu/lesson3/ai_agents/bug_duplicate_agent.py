@@ -4,8 +4,9 @@ import asyncio
 from dotenv import load_dotenv
 import os
 
+# LLM-as-a-judge pattern
 bug_duplicate_agent = Agent(
-    name="BugDuplicateChecker",
+    name="Bug Duplicate Checker Agent",
     instructions="Given two bug descriptions, answer only 'yes' if they describe the same issue, otherwise 'no'.",
     model="gpt-4o-mini"
 )

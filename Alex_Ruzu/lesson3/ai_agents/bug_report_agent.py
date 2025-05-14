@@ -8,12 +8,14 @@ import asyncio
 from jira import JIRA
 import hashlib
 import openai
+import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from mcp_servers.mcp_github import create_github_issue
+
+#from mcp_servers.mcp_github import create_github_issue
 #from mcp_servers.mcp_jira import create_jira_bug
 
-from my_agents.bug_duplicate_agent import check_duplicate
+from ai_agents.bug_duplicate_agent import check_duplicate
 
 
 JIRA_BUG_POLICY = """
@@ -45,7 +47,7 @@ If the review does not specify these, infer them or state 'Not specified.'
 For each bug report, call the create_jira_bug tool with:
 - The summary (first sentence or paraphrase)
 - The description (full review text, formatted as specified)
-- The original review text from the CSV (verbatim, unmodified, for duplicate detection)
+- The original review text from the CSV (verbatim, unmodified, for duplicate detection).
 """
 
 def get_all_jira_bugs(jira_client, jira_project_key):
@@ -105,9 +107,8 @@ async def create_jira_bug(summary: str, description: str, original_review_text: 
     Returns:
         The key of the created Jira issue or a message if duplicate found.
     """
-    print("\nSummary:", summary)
+    print("Summary:", summary)
     print("Description:", description)
-    print("Original review text:", original_review_text)
     try:
         jira_server = os.getenv('JIRA_SERVER')
         jira_email = os.getenv('JIRA_EMAIL')
@@ -122,18 +123,19 @@ async def create_jira_bug(summary: str, description: str, original_review_text: 
         description_with_hash = f"{description}\n\n{hash_line}"
 
         # Use the duplicate check function based on the review hash
-        '''
         duplicate_issue = is_duplicate_jira_bug_hash(jira, jira_project_key, review_hash)
         if duplicate_issue:
-            print(f"Duplicate not created: A bug with the same review hash already exists (e.g., {duplicate_issue.key}).")
-            return f"Duplicate not created: A bug with the same review hash already exists (e.g., {duplicate_issue.key})."
-        '''
-        # Use the bug_duplicate_agent-based duplicate check
+            msg = f"Duplicate not created: A bug with the same review hash already exists (e.g., {duplicate_issue.key})."
+            print("Duplicate Jira issue key:", duplicate_issue.key)
+            return json.dumps({"classification": "bug", "result": msg, "duplicate": True, "key": duplicate_issue.key})
+
+        # Use the bug_duplicate_agent-based duplicate check (LLM-as-a-judge pattern)
         duplicate_key = await is_duplicate_jira_bug(jira, jira_project_key, description)
         if duplicate_key:
-            print(f"Duplicate not created: A bug with a similar description already exists (e.g., {duplicate_key}).")
-            return f"Duplicate not created: A bug with a similar description already exists (e.g., {duplicate_key})."
-            
+            msg = f"Duplicate not created: A bug with a similar description already exists (e.g., {duplicate_key})."
+            print("Duplicate Jira issue key:", duplicate_key)
+            return json.dumps({"classification": "bug", "result": msg, "duplicate": True, "key": duplicate_key})
+        
         issue_dict = {
             'project': {'key': jira_project_key},
             'summary': summary,
@@ -141,11 +143,11 @@ async def create_jira_bug(summary: str, description: str, original_review_text: 
             'issuetype': {'name': 'Bug'},
         }
         new_issue = jira.create_issue(fields=issue_dict)
-
-        print("Creating Jira Bug Report...")
-        return f"Created Jira issue: {new_issue.key}"
+        print("Created Jira issue key:", new_issue.key)
+        result_string = f"Created Jira issue: {new_issue.key}"
+        return json.dumps({"classification": "bug", "result": result_string, "key": new_issue.key})
     except Exception as e:
-        return f"Error creating Jira issue: {str(e)}"
+        return json.dumps({"classification": "bug", "result": f"Error creating Jira issue: {str(e)}", "error": True})
 
 
 
@@ -160,13 +162,15 @@ bug_report_agent = Agent(
     name="Bug Report Agent",
     instructions = (
         "You are a bug report agent. "
+        "You must always follow the Jira Bug Report Policy below when generating bug reports. "
+        f"Jira Bug Report Policy:\n{JIRA_BUG_POLICY}\n"
         "You are responsible for calling the create_jira_bug tool when handling a bug report. "
         "You must return ONLY the tool's result as your final output. Do not add any extra text."
     ),
     #tools=[print_hello_bug_report], # For testing
     #tools=[create_github_issue],    # GitHub MCP    
     tools=[create_jira_bug],         # Jira API
-    #tools=[create_jira_bug],        # Jira MCP    
+    #tools=[create_jira_bug...],        # Jira MCP    
     model="gpt-4o-mini"
 )
 

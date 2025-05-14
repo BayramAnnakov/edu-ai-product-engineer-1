@@ -17,25 +17,29 @@ def get_article_text(file_path: str) -> str:
         return ""
 
 
-def get_reviews_from_csv(csv_path: str, num_rows: int = 5) -> str:
+def get_reviews_from_csv(csv_path: str, review_column: str = "Text", num_rows=None, product_id=None) -> str:
     """Read reviews from a CSV file and return them as a formatted string.
     
     Args:
         csv_path: Path to the CSV file.
-        num_rows: Number of rows to read (default: 5).
+        num_rows: Number of rows to read (default: None, which means all rows).
+        product_id: If provided, only reviews for this ProductId will be included.
         
     Returns:
         A formatted string of reviews or an error message.
     """
     try:
-        # Try to read the CSV with only num_rows
-        df = pd.read_csv(csv_path, nrows=num_rows)
+        df = pd.read_csv(csv_path)
+        if product_id is not None:
+            df = df[df['ProductId'] == product_id]
+        if num_rows is not None:
+            df = df.head(num_rows)
         if df.empty:
             return "No reviews found in the CSV file."
 
-        # Check if "Text" column exists, otherwise find the first text-based column
-        if "Text" in df.columns:
-            review_column = "Text"
+        # Check if review_column exists, otherwise find the first text-based column
+        if review_column in df.columns:
+            review_column = review_column
         else:
             # Select first non-numeric column as a fallback
             text_columns = df.select_dtypes(include=['object', 'string']).columns
@@ -58,7 +62,7 @@ def get_reviews_from_csv(csv_path: str, num_rows: int = 5) -> str:
         return combined_text
     except Exception as e:
         return f"Error reading CSV file: {e}"
-
+        
 
 def save_to_markdown(content, filename="virtual_user_board_summary.md"):
     """Save content to a markdown file with timestamp."""
@@ -73,42 +77,50 @@ def save_to_markdown(content, filename="virtual_user_board_summary.md"):
 
 
 def extract_personas(text):
-    """Extract simple personas from the output of the review_summarizer_agent."""
+    """Extract full persona names and descriptions from the output of the review_summarizer_agent."""
     personas = []
-    # Look for persona sections in the text - pattern: PERSONA: followed by description
-    persona_sections = re.findall(r'PERSONA:\s*(.*?)(?=PERSONA:|$)', text, re.DOTALL)
+    # Look for persona sections in the text - pattern: PERSONA: followed by name and description
+    persona_sections = re.findall(r'PERSONA:\s*([^\n\-]+)[\-\n]+(.*?)(?=PERSONA:|$)', text, re.DOTALL)
     
-    for section in persona_sections:
-        section = section.strip()
-        if not section:
-            continue
-            
-        # Try to extract persona type and description
-        parts = section.split('-', 1)
-        if len(parts) >= 2:
-            persona_type = parts[0].strip()
-            description = parts[1].strip()
-        else:
-            persona_type = "Consumer"
-            description = section
-        
+    for name, description in persona_sections:
+        name = name.strip()
+        description = description.strip()
+        if not name:
+            name = "Consumer"
+        if not description:
+            description = "No description provided."
         personas.append({
-            "type": persona_type,
+            "type": name,
             "description": description
         })
-    
+    # Fallback: if regex fails, use old logic
+    if not personas:
+        fallback_sections = re.findall(r'PERSONA:\s*(.*?)(?=PERSONA:|$)', text, re.DOTALL)
+        for section in fallback_sections:
+            section = section.strip()
+            if not section:
+                continue
+            parts = section.split('-', 1)
+            if len(parts) >= 2:
+                persona_type = parts[0].strip()
+                description = parts[1].strip()
+            else:
+                persona_type = "Consumer"
+                description = section
+            personas.append({
+                "type": persona_type,
+                "description": description
+            })
     # Limit to 3 personas
     return personas[:3]
 
 
 def create_persona_agents(personas):
-    """Create persona agents based on the extracted personas."""
+    """Create persona agents based on the extracted personas, using the full persona name for display."""
     persona_agents = []
-    
     for i, persona in enumerate(personas, 1):
-        # Create a name with "Persona:" prefix for clarity
+        # Use the full persona name for clarity
         display_name = f"Persona: {persona['type']}"
-        
         agent = Agent(
             name=display_name,
             instructions=(
@@ -121,7 +133,6 @@ def create_persona_agents(personas):
             model="gpt-4o-mini"
         )
         persona_agents.append(agent)
-    
     return persona_agents
 
 
