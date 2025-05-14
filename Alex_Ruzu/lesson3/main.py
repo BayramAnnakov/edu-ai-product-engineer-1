@@ -27,6 +27,7 @@ async def classify_review(review):
         classification = json.loads(output).get("classification", "other")
     except Exception:
         classification = "other"
+
     print("DEBUG: final_output =", repr(result.final_output))
     return classification
 
@@ -41,13 +42,13 @@ async def main():
         print(f"Error: File '{csv_path}' not found.")
         return
     
-    reviews = load_reviews(csv_path, review_column=review_column, num_rows=10)
+    reviews = load_reviews(csv_path, review_column=review_column, num_rows=5)
     print(f"Loaded {len(reviews)} reviews")
 
     for idx, review in enumerate(reviews, 1):
         print(f"Review #{idx}: {review}")
         classification = await classify_review(review)
-        print(f"Classification: {classification}\n")
+        print(f"Classification in main(): {classification}\n")
 
 
 if __name__ == "__main__":

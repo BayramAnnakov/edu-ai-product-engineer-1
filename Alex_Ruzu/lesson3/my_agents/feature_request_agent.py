@@ -24,6 +24,7 @@ feature_request_agent = Agent(
         "Do not add any extra text."        
     ),
     tools=[print_hello_feature_request],
+    model="gpt-4o-mini"
 )
 
 if __name__ == "__main__":

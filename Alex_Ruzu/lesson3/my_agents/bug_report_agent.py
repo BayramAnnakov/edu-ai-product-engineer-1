@@ -1,12 +1,20 @@
+import sys
+import os
+from dotenv import load_dotenv
+
 from agents import Agent, Runner, function_tool
 import pandas as pd
 import asyncio
+from jira import JIRA
+import hashlib
+import openai
 
-from dotenv import load_dotenv
-import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from mcp_servers.mcp_github import create_github_issue
+#from mcp_servers.mcp_jira import create_jira_bug
 
+from my_agents.bug_duplicate_agent import check_duplicate
 
-load_dotenv()
 
 JIRA_BUG_POLICY = """
 Jira Bug Report Policy:
@@ -25,8 +33,9 @@ Jira Bug Report Policy:
 - Do not skip any review classified as a bug report.
 - Do not duplicate bug reports for the same review.
 - Do not include personal information from the reviewer.
+
 - Example:
-    *Description:* The rubber o-ring inside the pump slides out of place, jamming the pump and rendering it unusable.
+    *Description:* The rubber o-ring inside the pump slides out of place, jamming the pump and rendering it unusable.\n
     *Expected behavior:* The pump should function reliably and the o-ring should stay in place.
     *Actual behavior:* The o-ring slides out of place, jamming the pump.    
     *Steps to reproduce:* Use the pump as directed for several weeks.
@@ -39,31 +48,151 @@ For each bug report, call the create_jira_bug tool with:
 - The original review text from the CSV (verbatim, unmodified, for duplicate detection)
 """
 
+def get_all_jira_bugs(jira_client, jira_project_key):
+    start_at = 0
+    max_results = 50
+    all_issues = []
+    while True:
+        issues = jira_client.search_issues(
+            f'project = {jira_project_key} AND issuetype = Bug',
+            startAt=start_at,
+            maxResults=max_results
+        )
+        if not issues:
+            break
+        all_issues.extend(issues)
+        if len(issues) < max_results:
+            break
+        start_at += max_results
+    return all_issues
+
+
+def is_duplicate_jira_bug_hash(jira_client, jira_project_key, review_hash):
+    """
+    Check for existing Jira issues with the same review hash in the description.
+    Returns the first duplicate issue if found, else None.
+    """
+    jql = f'project = {jira_project_key} AND issuetype = Bug AND description ~ "{review_hash}"'
+    issues = jira_client.search_issues(jql)
+    if issues:
+        return issues[0]
+    return 
+
+
+async def is_duplicate_jira_bug(jira_client, jira_project_key, new_description):
+    """
+    Check all bugs in the project for semantic duplicates using bug_duplicate_agent.
+    Returns the key of a duplicate issue if found, else None.
+    """
+    all_issues = get_all_jira_bugs(jira_client, jira_project_key)
+    for issue in all_issues:
+        existing_desc = getattr(issue.fields, 'description', None)
+        if existing_desc:
+            is_dup = await check_duplicate(new_description, existing_desc)
+            if is_dup:
+                return issue.key
+    return None
+
+
+@function_tool
+async def create_jira_bug(summary: str, description: str, original_review_text: str) -> str:
+    """
+    Create a bug issue in Jira, avoiding duplicates by using bug_duplicate_agent for semantic duplicate detection.
+    Args:
+        summary: The title/summary of the bug.
+        description: The detailed description of the bug.
+        original_review_text: The original review text from the CSV.
+    Returns:
+        The key of the created Jira issue or a message if duplicate found.
+    """
+    print("\nSummary:", summary)
+    print("Description:", description)
+    print("Original review text:", original_review_text)
+    try:
+        jira_server = os.getenv('JIRA_SERVER')
+        jira_email = os.getenv('JIRA_EMAIL')
+        jira_api_token = os.getenv('JIRA_API_TOKEN')
+        jira_project_key = os.getenv('JIRA_PROJECT_KEY')
+
+        jira = JIRA(server=jira_server, basic_auth=(jira_email, jira_api_token))
+
+        # Generate a hash of the original review text for traceability
+        review_hash = hashlib.sha256(original_review_text.encode('utf-8')).hexdigest()
+        hash_line = f"*Review-Hash:* {review_hash}"
+        description_with_hash = f"{description}\n\n{hash_line}"
+
+        # Use the duplicate check function based on the review hash
+        '''
+        duplicate_issue = is_duplicate_jira_bug_hash(jira, jira_project_key, review_hash)
+        if duplicate_issue:
+            print(f"Duplicate not created: A bug with the same review hash already exists (e.g., {duplicate_issue.key}).")
+            return f"Duplicate not created: A bug with the same review hash already exists (e.g., {duplicate_issue.key})."
+        '''
+        # Use the bug_duplicate_agent-based duplicate check
+        duplicate_key = await is_duplicate_jira_bug(jira, jira_project_key, description)
+        if duplicate_key:
+            print(f"Duplicate not created: A bug with a similar description already exists (e.g., {duplicate_key}).")
+            return f"Duplicate not created: A bug with a similar description already exists (e.g., {duplicate_key})."
+            
+        issue_dict = {
+            'project': {'key': jira_project_key},
+            'summary': summary,
+            'description': description_with_hash,
+            'issuetype': {'name': 'Bug'},
+        }
+        new_issue = jira.create_issue(fields=issue_dict)
+
+        print("Creating Jira Bug Report...")
+        return f"Created Jira issue: {new_issue.key}"
+    except Exception as e:
+        return f"Error creating Jira issue: {str(e)}"
+
+
+
+
 @function_tool
 def print_hello_bug_report():
     print("Creating Jira Bug Report...")
     return '{"classification": "bug"}'
 
 
-bug_report_agent = Agent (
-    name = "Bug Report Agent",
-    #instructions = "You are a bug report agent. You are responsible for reporting the bug to the development team.",
+bug_report_agent = Agent(
+    name="Bug Report Agent",
     instructions = (
         "You are a bug report agent. "
-        "You are responsible for calling the print_hello_bug_report tool when handling a bug report. "
-        "You must always call the print_hello_bug_report tool when handling a bug report, "
-        "and you must return ONLY the tool's result as your final output. "
-        "Do not add any extra text."
+        "You are responsible for calling the create_jira_bug tool when handling a bug report. "
+        "You must return ONLY the tool's result as your final output. Do not add any extra text."
     ),
-    tools=[print_hello_bug_report],
+    #tools=[print_hello_bug_report], # For testing
+    #tools=[create_github_issue],    # GitHub MCP    
+    tools=[create_jira_bug],         # Jira API
+    #tools=[create_jira_bug],        # Jira MCP    
+    model="gpt-4o-mini"
 )
+
 
 if __name__ == "__main__":
     import asyncio
     async def main():
-        sample_bug_report = "The app crashes when I try to send a message."
-        print(f"Testing bug_report_agent with input: {sample_bug_report}")
-        result = await Runner.run(bug_report_agent, sample_bug_report)
-        print("Agent final output:", result.final_output)
-    asyncio.run(main())
+        load_dotenv()
 
+        sample_bug_report = """I've been using viber since 2010 and there are still major bugs that haven't been fixed. 
+        Sometimes when I write a sentence it would send but keep the last word of it and send it right after my message. 
+        Another thing is my aliases. I would go and put a 30 or more character alias and it would say 
+        alias error even tho the limit of characters is 50. """
+        print(f"Testing bug_report_agent with input: {sample_bug_report}")
+
+        result = await Runner.run(
+            bug_report_agent,
+            f"""Generate a Jira bug report for the following review. 
+Follow the Jira Bug Report Policy below:
+
+{JIRA_BUG_POLICY}
+
+Review:
+{sample_bug_report}
+"""
+        )
+        print("Agent final output:", result.final_output)
+        
+    asyncio.run(main())
