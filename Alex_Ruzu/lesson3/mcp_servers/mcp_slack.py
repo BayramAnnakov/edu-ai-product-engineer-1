@@ -13,7 +13,8 @@ SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#general")
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 
 @function_tool
-async def send_slack_message(channel: str, message: str):
+async def send_slack_message(message: str):
+    channel = os.getenv("SLACK_CHANNEL", "#general")
     async with MCPServerStdio(
         name="Slack MCP",
         params={
@@ -35,15 +36,6 @@ async def send_slack_message(channel: str, message: str):
             )
             return result.final_output
 
-def start_mcp_slack_server():
-    # Start the MCP Slack server as a subprocess
-    return subprocess.Popen(
-        ["npx", "@modelcontextprotocol/server-slack"],
-        env=os.environ.copy(),
-        stdout=sys.stdout,
-        stderr=sys.stderr,
-    )
-
 async def main():
     async with MCPServerStdio(
         name="Slack MCP",
@@ -57,7 +49,7 @@ async def main():
             instructions="You can send messages to Slack channels using the available tools.",
             mcp_servers=[server]
         )
-        #print("DEBUG: SLACK_BOT_TOKEN =", os.getenv("SLACK_BOT_TOKEN"))
+        print("DEBUG: SLACK_BOT_TOKEN =", os.getenv("SLACK_BOT_TOKEN"))
         print("SLACK_CHANNEL:", SLACK_CHANNEL)
 
         trace_id = gen_trace_id()

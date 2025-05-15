@@ -44,8 +44,7 @@ async def main():
     print(f"Loaded {len(reviews)} reviews")
 
     for idx, review in enumerate(reviews, 1):
-        #print(f"Review #{idx}: {review}")
-        print(f"Review #{idx}:")
+        print(f"\n--- Processing Review #{idx} ---\n{review}\n")
         classification = await classify_review(review)
         print(f"Classification: {classification}\n")
 
