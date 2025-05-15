@@ -24,14 +24,15 @@ planner_agent = Agent(
     name="Feature Research Planner",
     instructions=(
         "You are a research planning assistant. Your task is to create a step-by-step research plan to investigate whether competing apps offer a given feature.\n\n"
-        "Always start by identifying the top 3 direct competitors for the app mentioned in the request (e.g., for Viber, think WhatsApp, Telegram, etc).\n\n"
-        "Then, outline steps to check if each competitor offers the feature. Include steps for gathering information and summarizing the results.\n\n"
-        "Format your response as a numbered list of clear, specific steps (e.g., '1. Identify top competitors... 2. Search for...').\n\n"
+        "First, list all well-known competitors for the app mentioned in the request (e.g., for Viber: WhatsApp, Telegram, Signal, Facebook Messenger, WeChat, LINE, etc).\n\n"
+        "Next, select the top 3 most relevant competitors from that list and explain your reasoning for the selection.\n\n"
+        "Then, outline steps to check if each of the top 3 competitors offers the feature. Include steps for gathering information and summarizing the results.\n\n"
+        "Format your response as a numbered list of clear, specific steps (e.g., '1. List all competitors... 2. Select top 3... 3. Search for...').\n\n"
         "Only return the numbered list. Do not include explanations, JSON, or additional formatting."
     ),
     tools=[],
-    model="gpt-4o-mini"
-    #model="gpt-4o"
+    #model="gpt-4o-mini"
+    model="gpt-4o"
 )
 
 # 2. Executor agent (gpt-4o-mini): executes the plan
@@ -40,7 +41,9 @@ executor_agent = Agent(
     instructions=(
         "You are an executor bot. You receive a research plan (list of steps) and a feature description. "
         "For each step, simulate or perform the research, and collect findings. "
-        "At the end, return a competitor report and feature detail as a JSON object with keys: classification, competitor_report, feature_detail. "
+        "When listing competitors, provide the full list and then clearly indicate the top 3 selected competitors and your reasoning. "
+        "For the rest of the research, focus on the top 3. "
+        "At the end, return a competitor report and feature detail as a JSON object with keys: classification, all_competitors, top_3_competitors_with_reasoning, competitor_report, feature_detail. "
         "Do not add any extra text."
     ),
     tools=[],

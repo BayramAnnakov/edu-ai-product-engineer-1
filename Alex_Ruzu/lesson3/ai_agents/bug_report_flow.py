@@ -18,8 +18,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 #from mcp_servers.mcp_github import create_github_issue
 #from mcp_servers.mcp_jira import create_jira_bug
 
-from ai_agents.bug_duplicate_agent import check_duplicate
-
 
 JIRA_BUG_POLICY = """
 Jira Bug Report Policy:
@@ -176,6 +174,22 @@ bug_report_agent = Agent(
     #tools=[create_jira_bug...],        # Jira MCP    
     model="gpt-4o-mini"
 )
+
+
+# --- Deduplication logic (LLM-as-a-judge) ---
+from agents import Agent, Runner
+
+bug_duplicate_agent = Agent(
+    name="Bug Duplicate Checker Agent",
+    instructions="Given two bug descriptions, answer only 'yes' if they describe the same issue, otherwise 'no'.",
+    model="gpt-4o-mini"
+)
+
+async def check_duplicate(desc1, desc2):
+    prompt = f"Bug report 1:\n{desc1}\n\nBug report 2:\n{desc2}\n\nAre these two bug reports describing the same issue? Answer only 'yes' or 'no'."
+    result = await Runner.run(bug_duplicate_agent, prompt)
+    answer = result.final_output.strip().lower()
+    return answer.startswith("yes")
 
 
 if __name__ == "__main__":
