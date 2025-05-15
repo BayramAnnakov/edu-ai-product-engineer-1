@@ -7,6 +7,7 @@ import json
 
 from dotenv import load_dotenv
 import os
+from mcp_servers.mcp_slack import send_slack_message
 
 
 load_dotenv()
@@ -81,8 +82,15 @@ async def research_competitors(feature_description: str):
         "plan": plan_steps
     })
     exec_result = await Runner.run(executor_agent, executor_prompt)
-    # Step 3: Send result to Slack (placeholder)
-    send_feature_to_slack(exec_result.final_output)
+
+    # Step 3: Also print to terminal
+    print(exec_result.final_output)
+    
+    # Step 4: Send result to Slack (via MCP)
+    print("[SLACK PLACEHOLDER] Sending feature info to Slack:")
+    slack_channel = os.getenv("SLACK_CHANNEL", "#general")
+    await send_slack_message(slack_channel, exec_result.final_output)
+
     return exec_result.final_output
 
 feature_request_agent = Agent(
@@ -94,7 +102,7 @@ feature_request_agent = Agent(
         "You must return ONLY the tool's result as your final output, which should include a competitor report and feature detail. "
         "Do not add any extra text."
     ),
-    #tools=[print_hello_feature_request],
+    #tools=[print_hello_feature_request],  # For testing
     tools=[research_competitors],
     model="gpt-4o-mini"
 )
