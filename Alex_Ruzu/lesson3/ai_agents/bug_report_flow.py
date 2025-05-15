@@ -1,3 +1,6 @@
+# bug_report_flow.py
+# This file implements the bug report flow, including all agents and logic for bug report classification, deduplication, and Jira integration.
+
 import sys
 import os
 from dotenv import load_dotenv

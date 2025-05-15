@@ -40,7 +40,7 @@ async def main():
         print(f"Error: File '{csv_path}' not found.")
         return
     
-    reviews = load_reviews(csv_path, review_column=review_column, num_rows=15)
+    reviews = load_reviews(csv_path, review_column=review_column, num_rows=3)
     print(f"Loaded {len(reviews)} reviews")
 
     for idx, review in enumerate(reviews, 1):
