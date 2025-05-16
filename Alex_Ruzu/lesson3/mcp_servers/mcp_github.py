@@ -13,22 +13,22 @@ GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 REPO_NAME = os.getenv("REPO_NAME") 
 FULL_REPO = f"{GITHUB_USERNAME}/{REPO_NAME}"
 
-print("DEBUG: GITHUB_TOKEN =", os.getenv("GITHUB_TOKEN"))
-print("DEBUG: GITHUB_PERSONAL_ACCESS_TOKEN =", os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN"))
-
 @function_tool
 async def create_github_issue(title: str, description: str):
     async with MCPServerStdio(
         name="GitHub MCP",
         params={
             "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-github"]
+            "args": ["-y", "@modelcontextprotocol/server-github"],
+            "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+            }
         }
     ) as server:
         agent = Agent(
             name="GitHubAgent",
             instructions="You can answer questions and perform actions related to GitHub repositories, issues, and pull requests. Use the available tools to interact with GitHub.",
-            mcp_servers=[server]
+            mcp_servers=[server],
         )
         trace_id = gen_trace_id()
         with trace(workflow_name="MCP GitHub Example", trace_id=trace_id):
@@ -45,12 +45,12 @@ async def main():
         name="GitHub MCP",
         params={
             "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-github"]
+            "args": ["-y", "@modelcontextprotocol/server-github"],
+            "env": {
+                "GITHUB_PERSONAL_ACCESS_TOKEN": os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+            }
         }
     ) as server:
-        print("DEBUG: GITHUB_TOKEN =", os.getenv("GITHUB_TOKEN"))
-        print("DEBUG: GITHUB_PERSONAL_ACCESS_TOKEN =", os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN"))
-        print("FULL_REPO:", FULL_REPO)    
         agent = Agent(
             name="GitHubAgent",
             instructions="You can answer questions and perform actions related to GitHub repositories, issues, and pull requests. Use the available tools to interact with GitHub.",

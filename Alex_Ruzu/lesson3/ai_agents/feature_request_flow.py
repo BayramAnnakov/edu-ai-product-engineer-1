@@ -1,12 +1,14 @@
 # feature_request_flow.py
 # This file implements the feature request flow, including planner, executor, and main agent logic for feature research and competitor analysis.
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from agents import Agent, Runner, function_tool
 import pandas as pd
 import asyncio
 import json
 
 from dotenv import load_dotenv
-import os
 from mcp_servers.mcp_slack import send_slack_message
 
 
@@ -48,7 +50,7 @@ async def research_competitors(feature_description: str):
         f.write(exec_result.final_output + "\n")
 
     # Step 4: Send result to Slack
-    #send_slack_message(exec_result.final_output)
+    #await send_slack_message(exec_result.final_output)
 
     return exec_result.final_output
 

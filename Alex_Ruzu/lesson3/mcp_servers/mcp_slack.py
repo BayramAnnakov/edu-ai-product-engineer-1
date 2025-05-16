@@ -1,3 +1,5 @@
+# mcp_slack.py
+# This file implements the MCP Slack integration for sending messages to Slack channels.
 import asyncio
 from agents import Agent, Runner, gen_trace_id, trace
 from agents import function_tool
@@ -41,7 +43,12 @@ async def main():
         name="Slack MCP",
         params={
             "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-slack"]
+            "args": ["-y", "@modelcontextprotocol/server-slack"],
+            "env": {
+            "SLACK_BOT_TOKEN": os.getenv("SLACK_BOT_TOKEN"),
+            #"SLACK_TEAM_ID": os.getenv("SLACK_TEAM_ID"),
+            "SLACK_CHANNEL_IDS": os.getenv("SLACK_CHANNEL_IDS")
+          }
         }
     ) as server:
         agent = Agent(

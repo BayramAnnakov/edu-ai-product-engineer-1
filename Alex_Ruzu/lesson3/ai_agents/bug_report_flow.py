@@ -15,7 +15,7 @@ import json
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-#from mcp_servers.mcp_github import create_github_issue
+from mcp_servers.mcp_github import create_github_issue
 #from mcp_servers.mcp_jira import create_jira_bug
 
 
@@ -169,8 +169,8 @@ bug_report_agent = Agent(
         "You must return ONLY the tool's result as your final output. Do not add any extra text."
     ),
     #tools=[print_hello_bug_report], # For testing
-    #tools=[create_github_issue],    # GitHub MCP    
-    tools=[create_jira_bug],         # Jira API
+    tools=[create_github_issue],    # GitHub MCP    
+    #tools=[create_jira_bug],         # Jira API
     #tools=[create_jira_bug...],        # Jira MCP    
     model="gpt-4o-mini"
 )
