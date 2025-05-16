@@ -1,3 +1,4 @@
+# --- Virtual User Board ---
 from agents import Agent, function_tool, Runner
 import asyncio
 from dotenv import load_dotenv
@@ -180,26 +181,55 @@ async def run_virtual_user_board(persona_agents, facilitator_agent, product_idea
     # No return statement - function is now void
 
 
-async def main():
-    load_dotenv()
-    
-    # Path to the CSV file
-    csv_path = "reviews.csv"
-    
+    data_dir = "sample_files"    
+    #csv_path = "vacu-vin.csv"   # "Text"
+    #csv_path = "WhatsApp.csv"  # "content"
+    csv_path = "Viber.csv"      # "content"
+    review_column="content"
+
     # Check if the file exists
+    csv_path = os.path.join(data_dir, csv_path)
     if not os.path.exists(csv_path):
         print(f"Error: File '{csv_path}' not found.")
         return
     
     print(f"Starting review analysis for file: {csv_path}")
-    print("Note: Only the first 5 rows of the CSV file will be processed.")
-    print("Note: Reviews are expected to be in the 'Text' column.")
+    print(f"Note: Reviews are expected to be in the '{review_column}' column.")
     
     # Load reviews directly using the utility function
-    text = get_reviews_from_csv(csv_path, num_rows=5)
+    original_reviews = get_reviews_from_csv(csv_path, review_column=review_column, num_rows=10)
     
-    if text.startswith("Error") or text.startswith("No reviews"):
-        print(f"Error: {text}")
+    if original_reviews.startswith("Error") or original_reviews.startswith("No reviews"):
+        print(f"Error: {original_reviews}")
+        return
+
+
+
+async def main():
+    load_dotenv()
+
+    data_dir = "data"    
+    #csv_path = "vacu-vin.csv"
+    # review_column="Text"    
+    
+    csv_path = "viber.csv"
+    review_column = "content"
+
+    # Check if the file exists
+    csv_path = os.path.join(data_dir, csv_path)
+    if not os.path.exists(csv_path):
+        print(f"Error: File '{csv_path}' not found.")
+        return
+
+    print(f"Starting review analysis for file: {csv_path}")
+    print(f"Note: Reviews are expected to be in the '{review_column}' column.")
+
+
+    # Load reviews directly using the utility function
+    original_reviews = get_reviews_from_csv(csv_path, review_column=review_column, num_rows=15)
+    
+    if original_reviews.startswith("Error") or original_reviews.startswith("No reviews"):
+        print(f"Error: {original_reviews}")
         return
     
     try:
@@ -214,7 +244,7 @@ async def main():
             3. 2-3 representative user personas
             
             Reviews to analyze:
-            {text}
+            {original_reviews}
             """
         )
         

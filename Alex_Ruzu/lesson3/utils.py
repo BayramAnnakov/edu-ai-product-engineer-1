@@ -7,6 +7,39 @@ from agents import Agent, Runner
 import time
 
 
+def abstractive_summarize(text: str, max_length: int) -> str:
+    """
+    Generate an abstractive summary of reviews using OpenAI's GPT model.
+    This creates a concise version focusing on the main themes and points.
+    """
+    try:
+        # Handle default value inside the function
+        if max_length is None or max_length <= 0:
+            max_length = 150
+            
+        start_time = time.time()
+
+        openai = OpenAI()
+        response = openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a review summarization expert that creates concise, clear summaries. "
+                                    "Focus on the main themes, key points, and common sentiments across reviews."},
+                {"role": "user", "content": f"Please summarize the following reviews in {max_length} words or less:\n\n{text}"}
+            ],
+            temperature=0.1,
+            max_tokens=200
+        )        
+        summary = response.choices[0].message.content.strip()
+
+        processing_time = time.time() - start_time
+        print(f"Abstractive Summary - Processing time: {processing_time}")
+
+        return summary
+    except Exception as e:
+        return f"Error generating summary: {str(e)}"
+
+
 def get_article_text(file_path: str) -> str:
     """Read text from a file and return it as a string."""
     try:
@@ -62,7 +95,7 @@ def get_reviews_from_csv(csv_path: str, review_column: str = "Text", num_rows=No
         return combined_text
     except Exception as e:
         return f"Error reading CSV file: {e}"
-        
+
 
 def save_to_markdown(content, filename="virtual_user_board_summary.md"):
     """Save content to a markdown file with timestamp."""
@@ -77,50 +110,42 @@ def save_to_markdown(content, filename="virtual_user_board_summary.md"):
 
 
 def extract_personas(text):
-    """Extract full persona names and descriptions from the output of the review_summarizer_agent."""
+    """Extract simple personas from the output of the review_summarizer_agent."""
     personas = []
-    # Look for persona sections in the text - pattern: PERSONA: followed by name and description
-    persona_sections = re.findall(r'PERSONA:\s*([^\n\-]+)[\-\n]+(.*?)(?=PERSONA:|$)', text, re.DOTALL)
+    # Look for persona sections in the text - pattern: PERSONA: followed by description
+    persona_sections = re.findall(r'PERSONA:\s*(.*?)(?=PERSONA:|$)', text, re.DOTALL)
     
-    for name, description in persona_sections:
-        name = name.strip()
-        description = description.strip()
-        if not name:
-            name = "Consumer"
-        if not description:
-            description = "No description provided."
+    for section in persona_sections:
+        section = section.strip()
+        if not section:
+            continue
+            
+        # Try to extract persona type and description
+        parts = section.split('-', 1)
+        if len(parts) >= 2:
+            persona_type = parts[0].strip()
+            description = parts[1].strip()
+        else:
+            persona_type = "Consumer"
+            description = section
+        
         personas.append({
-            "type": name,
+            "type": persona_type,
             "description": description
         })
-    # Fallback: if regex fails, use old logic
-    if not personas:
-        fallback_sections = re.findall(r'PERSONA:\s*(.*?)(?=PERSONA:|$)', text, re.DOTALL)
-        for section in fallback_sections:
-            section = section.strip()
-            if not section:
-                continue
-            parts = section.split('-', 1)
-            if len(parts) >= 2:
-                persona_type = parts[0].strip()
-                description = parts[1].strip()
-            else:
-                persona_type = "Consumer"
-                description = section
-            personas.append({
-                "type": persona_type,
-                "description": description
-            })
+    
     # Limit to 3 personas
     return personas[:3]
 
 
 def create_persona_agents(personas):
-    """Create persona agents based on the extracted personas, using the full persona name for display."""
+    """Create persona agents based on the extracted personas."""
     persona_agents = []
+    
     for i, persona in enumerate(personas, 1):
-        # Use the full persona name for clarity
+        # Create a name with "Persona:" prefix for clarity
         display_name = f"Persona: {persona['type']}"
+        
         agent = Agent(
             name=display_name,
             instructions=(
@@ -133,6 +158,7 @@ def create_persona_agents(personas):
             model="gpt-4o-mini"
         )
         persona_agents.append(agent)
+    
     return persona_agents
 
 
