@@ -58,7 +58,7 @@ async def main():
     load_dotenv()
     
     # Path to the CSV file
-    csv_path = "Reviews.csv"
+    csv_path = "data/reviews.csv"
     
     # Check if the file exists
     if not os.path.exists(csv_path):
@@ -66,11 +66,11 @@ async def main():
         return
     
     print(f"Starting review analysis for file: {csv_path}")
-    print("Note: Only the first 5 rows of the CSV file will be processed.")
+    print("Note: Only the first 15 rows of the CSV file will be processed.")
     print("Note: Reviews are expected to be in the 'Text' column.")
     
     # Load reviews directly using the utility function
-    text = get_reviews_from_csv(csv_path, num_rows=5)
+    text = get_reviews_from_csv(csv_path, num_rows=15)
     
     if text.startswith("Error") or text.startswith("No reviews"):
         print(f"Error: {text}")

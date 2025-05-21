@@ -206,7 +206,7 @@ def main():
     """Main function to run the text summarization workflow."""
     try:
         # Load text from file
-        with open("oreilly_endofprogramming.txt", "r", encoding="utf-8") as file:
+        with open("data/oreilly_endofprogramming.txt", "r", encoding="utf-8") as file:
             text = file.read()
         
         # Create initial state

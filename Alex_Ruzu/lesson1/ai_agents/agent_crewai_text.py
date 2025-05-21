@@ -70,7 +70,7 @@ async def main():
     load_dotenv()
 
     # Read text from file
-    file_path = "oreilly_endofprogramming.txt"
+    file_path = "data/oreilly_endofprogramming.txt"
     text = get_article_text(file_path)
     
     if text.startswith("Error reading file"):
