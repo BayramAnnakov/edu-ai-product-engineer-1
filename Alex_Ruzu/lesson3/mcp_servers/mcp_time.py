@@ -10,8 +10,8 @@ async def main():
     async with MCPServerStdio(
         name="Time MCP",
         params={
-            "command": "python",
-            "args": ["-m", "mcp_server_time", "--local-timezone=Europe/Helsinki"]
+            "command": "docker",
+            "args": ["run", "-i", "--rm", "mcp/time", "--local-timezone=Europe/Tallinn"]
         }
     ) as server:
     

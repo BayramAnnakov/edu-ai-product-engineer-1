@@ -1,74 +1,125 @@
-# mcp_slack.py
-# This file implements the MCP Slack integration for sending messages to Slack channels.
 import asyncio
-from agents import Agent, Runner, gen_trace_id, trace
-from agents import function_tool
+from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
 from dotenv import load_dotenv
 import os
-import sys
-import subprocess
 
 load_dotenv()
 
-SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#general")
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
+SLACK_TEAM_ID = os.getenv("SLACK_TEAM_ID")
+SLACK_CHANNEL = os.getenv("SLACK_CHANNEL_IDS")
 
-@function_tool
+REQUIRED = [SLACK_BOT_TOKEN, SLACK_TEAM_ID, SLACK_CHANNEL]
+if not all(REQUIRED):
+    raise RuntimeError("Export SLACK_BOT_TOKEN, SLACK_TEAM_ID, SLACK_CHANNEL first.")
+
+DOCKER_IMAGE = "mcp/slack"
+
+
 async def send_slack_message(message: str):
-    channel = os.getenv("SLACK_CHANNEL", "#general")
-    async with MCPServerStdio(
-        name="Slack MCP",
+    """
+    Send a message to the Slack channel.
+    """
+
+    server = MCPServerStdio(
+        name="Slack MCP",        
         params={
-            "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-slack"]
-        }
-    ) as server:
+            "command": "docker",
+            "args": [
+                "run", "-i", "--rm",
+                "-e", "SLACK_BOT_TOKEN",
+                "-e", "SLACK_TEAM_ID",
+                "-e", "SLACK_CHANNEL_IDS",
+                DOCKER_IMAGE,
+            ],
+            "env": {
+                "SLACK_BOT_TOKEN": SLACK_BOT_TOKEN,
+                "SLACK_TEAM_ID": SLACK_TEAM_ID,
+                "SLACK_CHANNEL_IDS": SLACK_CHANNEL,
+            },
+        },
+        cache_tools_list=True,
+    )       
+    await server.connect()
+
+    try:    
         agent = Agent(
             name="SlackAgent",
-            instructions="You can send messages to Slack channels using the available tools.",
-            mcp_servers=[server]
+            instructions=(
+                "You are a Slack assistant. Use the available tools to answer the user's question. "
+                "If no tool is relevant, reply normally."
+            ),
+            mcp_servers=[server],
         )
-        trace_id = gen_trace_id()
-        with trace(workflow_name="MCP Slack Example", trace_id=trace_id):
-            print(f"View trace: https://platform.openai.com/traces/trace?trace_id={trace_id}\n")
-            result = await Runner.run(
-                starting_agent=agent,
-                input=f"Send the following message to the Slack channel '{channel}': {message}"
-            )
-            return result.final_output
+
+        result = await Runner.run(
+            starting_agent=agent,
+            input=f"Send the following message to the Slack channel '{SLACK_CHANNEL}': {message}"
+        )
+
+        return result.final_output
+    except Exception as e:
+        return f"Error: {e}"
+    finally:
+        await server.cleanup()
+
 
 async def main():
-    async with MCPServerStdio(
-        name="Slack MCP",
+    server = MCPServerStdio(
+        name="Slack MCP",        
         params={
-            "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-slack"],
+            "command": "docker",
+            "args": [
+                "run", "-i", "--rm",
+                "-e", "SLACK_BOT_TOKEN",
+                "-e", "SLACK_TEAM_ID",
+                "-e", "SLACK_CHANNEL_IDS",
+                DOCKER_IMAGE,
+            ],
             "env": {
-            "SLACK_BOT_TOKEN": os.getenv("SLACK_BOT_TOKEN"),
-            #"SLACK_TEAM_ID": os.getenv("SLACK_TEAM_ID"),
-            "SLACK_CHANNEL_IDS": os.getenv("SLACK_CHANNEL_IDS")
-          }
-        }
-    ) as server:
+                "SLACK_BOT_TOKEN": SLACK_BOT_TOKEN,
+                "SLACK_TEAM_ID": SLACK_TEAM_ID,
+                "SLACK_CHANNEL_IDS": SLACK_CHANNEL,
+            },
+        },
+        cache_tools_list=True,
+    )       
+    await server.connect()
+
+    try:    
         agent = Agent(
             name="SlackAgent",
-            instructions="You can send messages to Slack channels using the available tools.",
-            mcp_servers=[server]
+            instructions=(
+                "You are a Slack assistant. Use the available tools to answer the user's question. "
+                "If no tool is relevant, reply normally."
+            ),
+            mcp_servers=[server],
         )
-        print("DEBUG: SLACK_BOT_TOKEN =", os.getenv("SLACK_BOT_TOKEN"))
-        print("SLACK_CHANNEL:", SLACK_CHANNEL)
+        
+        # Example: Send a message to the Slack channel
+        result = await Runner.run(
+            starting_agent=agent,
+            input=f"Send the following message to the Slack channel '{SLACK_CHANNEL}': Hello from MCP Slack integration!"
+        )
+        print("Message sent to the Slack channel result:")
+        print(result.final_output)
 
-        trace_id = gen_trace_id()
-        with trace(workflow_name="MCP Slack Example", trace_id=trace_id):
-            print(f"View trace: https://platform.openai.com/traces/trace?trace_id={trace_id}\n")
-            # Example: Send a message to the Slack channel
-            result = await Runner.run(
-                starting_agent=agent,
-                input=f"Send the following message to the Slack channel '{SLACK_CHANNEL}': Hello from MCP Slack integration!"
-            )
-            print("Message sent result:")
-            print(result.final_output)
+        result = await Runner.run(
+            starting_agent=agent,
+            input=f"Get a list of users in the Slack channel '{SLACK_CHANNEL}'"
+        )
+        print("List of users in the Slack channel:")
+        print(result.final_output)
+
+        await send_slack_message("Hello from MCP Slack integration!!!!")
+
+        return result.final_output
+    except Exception as e:
+        return f"Error: {e}"
+    finally:
+        await server.cleanup()  
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -1,12 +1,13 @@
-from agents import Agent, function_tool, Runner
-
+# main.py
+# This file implements the main function for the Agents SDK.
+from agents import Runner
 import pandas as pd
 import asyncio
+import json
 
 from ai_agents.triage_agent import triage_agent
 from dotenv import load_dotenv
 import os
-import json
 
 
 def load_reviews(csv_path, review_column="content", num_rows=None):
@@ -17,16 +18,13 @@ def load_reviews(csv_path, review_column="content", num_rows=None):
 
 
 async def classify_review(review):
-    # Use the triage agent to classify the review
     result = await Runner.run(triage_agent, review)
-
-    # Try to extract the classification from the agent's output
-    output = (result.final_output or "").strip().lower()
+    output = (result.final_output or "").strip()
+    print(f"Classification output: {output}")
     try:
-        classification = json.loads(output).get("classification", "other")
+        classification = json.loads(output)["classification"]
     except Exception:
-        classification = "other"
-
+        classification = "N/A"
     return classification
 
 
