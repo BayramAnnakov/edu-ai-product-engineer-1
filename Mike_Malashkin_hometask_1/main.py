@@ -1,37 +1,52 @@
+import asyncio
 import os
-from processor import process_reviews, analyze_results
-import json
+import sys
 from datetime import datetime
+from dotenv import load_dotenv
 
-def main():
-    """Main entry point for the project."""
-    print("Starting the summarization project...")
+# Импортируем функциональность из других модулей
+from app_reviews_scraper import AppReviewsScraper
+from analyze_sober_reviews import run_sober_analysis
+
+# Загружаем переменные окружения
+load_dotenv()
+
+# Проверяем наличие API ключа OpenAI
+if not os.getenv("OPENAI_API_KEY"):
+    print("Ошибка: OPENAI_API_KEY не найден в переменных окружения")
+    print("Пожалуйста, создайте файл .env и добавьте в него строку OPENAI_API_KEY=ваш_ключ")
+    sys.exit(1)
+
+async def main():
+    """Основная функция запуска пайплайна анализа отзывов"""
+    print("=" * 70)
+    print(f"Запуск пайплайна анализа отзывов {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 70)
     
-    # Step 1: Process reviews from Reviews.csv
-    print("\nStep 1: Processing reviews...")
-    output_file = process_reviews()
+    try:
+        # Запускаем анализ отзывов приложения Sober
+        await run_sober_analysis()
+        
+        print("\nВесь пайплайн выполнен успешно!")
+        
+    except Exception as e:
+        print(f"\nОшибка при выполнении пайплайна: {str(e)}")
+        return 1
     
-    if not output_file:
-        print("Failed to process reviews. Exiting...")
-        return
-    
-    # Step 2: Load the processed results
-    print("\nStep 2: Analyzing results...")
-    with open(output_file, 'r', encoding='utf-8') as f:
-        results = json.load(f)
-    
-    # Step 3: Analyze the results
-    analysis = analyze_results(results)
-    
-    # Step 4: Save the analysis
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    analysis_file = f"summarization_comparison_{timestamp}.json"
-    
-    with open(analysis_file, 'w', encoding='utf-8') as f:
-        json.dump(analysis, f, ensure_ascii=False, indent=4)
-    
-    print(f"\nAnalysis saved to {analysis_file}")
-    print("\nProject completed successfully!")
+    return 0
 
 if __name__ == "__main__":
-    main() 
+    try:
+        # Создаем директорию для выходных файлов, если она не существует
+        os.makedirs('output', exist_ok=True)
+        
+        # Запускаем асинхронную функцию main()
+        exit_code = asyncio.run(main())
+        sys.exit(exit_code)
+        
+    except KeyboardInterrupt:
+        print("\nПроцесс прерван пользователем")
+        sys.exit(130)
+    except Exception as e:
+        print(f"\nНепредвиденная ошибка: {str(e)}")
+        sys.exit(1) 
