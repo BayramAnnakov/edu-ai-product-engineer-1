@@ -17,6 +17,7 @@ load_dotenv()
 
 import os
 import asyncio
+from filtered_mcp_server import FilteredServer
 
 # Agents-SDK ≥ 0.0.21
 from agents.mcp.server import MCPServerStdio      # core MCP client
@@ -53,6 +54,25 @@ async def demo_agent_with_mcp():
         name="github",
         cache_tools_list=True,
     )
+
+    # Use this MCP server wrapper to filter the tools that are available to the agent
+    # server = FilteredServer(
+    #     params={
+    #         "command": "docker",
+    #         "args": [
+    #             "run",
+    #             "-i",
+    #             "--rm",
+    #             "-e",
+    #             "GITHUB_PERSONAL_ACCESS_TOKEN",
+    #             DOCKER_IMAGE,
+    #         ],
+    #         "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": GITHUB_TOKEN},
+    #     },
+    #     name="github",
+    #     cache_tools_list=True,
+    #     allowed=["list_issues"]
+    # )
 
     await server.connect()
 
