@@ -1,5 +1,11 @@
 nltk==3.8.1
-openai==0.28.0
+openai>=1.12.0
 python-dotenv==1.0.1
+kagglehub[pandas-datasets]==0.1.0
 pandas==2.2.0
-requests==2.32.3 
+requests==2.32.3
+selenium==4.18.1
+webdriver-manager==4.0.1
+beautifulsoup4==4.12.3
+httpx==0.26.0
+pyrogram==2.0.106 
