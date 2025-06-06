@@ -1,0 +1,31 @@
+{
+    "mcpServers": {
+      "github": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+          "ghcr.io/github/github-mcp-server"
+        ],
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR GITHUB TOKEN HERE"
+        }
+      },
+      "jira": {
+        "command": "docker",
+        "args": [
+          "run", "-i", "--rm",
+          "-e", "JIRA_URL",
+          "-e", "JIRA_USERNAME",
+          "-e", "JIRA_API_TOKEN",
+          "ghcr.io/sooperset/mcp-atlassian:latest"
+        ],
+        "env": {
+          "JIRA_URL": "YOUR JIRA URL HERE",
+          "JIRA_USERNAME": "YOUR JIRA USERNAME HERE",
+          "JIRA_API_TOKEN": "YOUR JIRA TOKEN HERE"
+        }
+      }
+    }
+  }
+  

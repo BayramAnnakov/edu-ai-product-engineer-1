@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Editor/IDE
+.vscode/
+*.code-workspace
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Cursor
+.cursorignore
+.cursor/
+.cursor/rules/
+
+# Project specific
+## Data files
+*.csv
+*.png
+*.txt
+results/
+logs/
+
+## Local development
+*.local
+*.bak
+*.swp
+*.swo
+*~
+
+## Temporary files
+*.tmp
+*.temp
+*.log

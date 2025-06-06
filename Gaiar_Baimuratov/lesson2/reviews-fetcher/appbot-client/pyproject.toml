@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "appbot-client"
+version = "0.1.0"
+description = "Client for AppBot API"
+authors = [{name = "Gaiar Baimuratov", email = "gaiar.baimuratov@zalando.de"}]
+requires-python = ">=3.7"
+dependencies = [
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.pytest]
+testpaths = ["tests"]

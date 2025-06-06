@@ -1,0 +1,2585 @@
+Rate Limits
+Each team with a paid API account is allowed a fixed number of requests per subscription period with a maximum burst of 20 requests per minute, spread over that minute.
+
+We reserve the right to adjust the rate limit for given endpoints to provide a high quality of service for all API customers.
+
+The following HTTP headers can be used to track usage.
+
+ 
+
+HTTP Header
+Description
+Current
+X-RateLimit-Limit
+Request limit per subscription period
+3000000
+X-RateLimit-Remaining
+The number of requests left for the subscription period
+2967823
+X-RateLimit-Reset
+The timestamp of the next rate limit reset
+2025-08-16 07:26:26 UTC
+Endpoints
+Jump to section:
+
+Token Information
+Listing Team Sources
+Listing Detected Languages
+Listing Topics, Custom Topics & Tags
+Listing Countries
+Listing Ratings Countries
+Fetching Reviews
+Review Summary By Date
+Review Summary By Country
+Review Summary By Stars
+Review Star Overview
+Sentiment Breakdown
+Sentiment Timeline
+Versions
+Sentiment Grade
+Popular Words
+Critical Words
+Interesting Words
+Trending Up Words
+Trending Down Words
+New Words
+Phrases
+Topics
+Topics - Fetching Reviews
+Custom Topics
+Custom Topics - Fetching Reviews
+Custom Tags
+Custom Tags - Fetching Reviews
+Ratings - Live
+Ratings - Historical (Ratings Over Time)
+Ratings - Bulk
+Token Information
+URL:
+https://api.appbot.co/api/v2/me
+
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/me"
+Example Response:
+{
+  "api_key": "BDQXXXXXX",
+  "desc": "API Key description",
+  "team": 10000
+}
+Notes
+This endpoint lists information about your current token. It can also be used as a ping that won't use up your API quota.
+
+Listing Team Sources
+URL:
+https://api.appbot.co/api/v2/apps
+
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps"
+Example Response:
+{
+  "results": [
+    {
+      "id": 68,
+      "identifier": "650762525",
+      "name": "7 Minute Workout",
+      "store": "iOS",
+      "store_id": "ios",
+      "icon": "https://assets.appbot.co/foo",
+      "authenticated": false
+    }
+  ],
+  "count": 1
+}
+Notes
+This endpoint lists all apps for your team. You can see the team list at the bottom of the Manage Sources screen.
+
+Listing Detected Languages
+URL:
+https://api.appbot.co/api/v2/detected_languages
+
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/detected_languages"
+Example Response:
+{
+  "results": [
+    {
+      "id": "en",
+      "name": "English"
+    },
+    {
+      "id": "zh-Hant",
+      "name": "Chinese (Traditional)"
+    }
+  ],
+  "count": 100
+}
+Listing Topics, Custom Topics & Tags
+URL:
+https://api.appbot.co/api/v2/topics
+
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/topics"
+Example Response:
+{
+  "results": [
+    {
+      "id": 1,
+      "name": "Advertising",
+      "type": "Topic",
+      "owning_user": null
+    },
+    {
+      "id": 2,
+      "name": "My Custom Topic",
+      "type": "CustomTopic",
+      "owning_user": "foo@bar.com"
+    },
+    {
+      "id": 3,
+      "name": "My Tag",
+      "type": "Tag",
+      "owning_user": "foo@bar.com"
+    }
+  ],
+  "count": 3
+}
+Listing Countries
+Returns a list of review-specific countries. Used to look up the country_id returned by the review endpoints.
+
+For ratings endpoints, use the ratings_countries endpoint below.
+
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/countries
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/countries"
+Example Response:
+{
+  "results": [
+    {
+      "id": 101,
+      "name": "United States",
+      "code": "us"
+    },
+    {
+      "id": 102,
+      "name": "Australia",
+      "code": "au"
+    }
+  ],
+  "count": 150
+}
+Listing Ratings Countries
+Returns a list of ratings-specific countries. Used to look up the country_id returned by the ratings/bulk endpoint.
+
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/ratings_countries
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings_countries"
+Example Response:
+{
+  "results": [
+    {
+      "id": 1137,
+      "name": "Australia",
+      "code": "AU"
+    },
+    {
+      "id": 1298,
+      "name": "United States",
+      "code": "US"
+    }
+  ],
+  "count": 2
+}
+Fetching Reviews
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/reviews
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+page
+integer
+the page to fetch (see note on limit below)
+no (defaults to 1)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/reviews?end=2025-04-23&page=1&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "app_id": ":app_id",
+      "app_store_id": "1234",
+      "id": 1329851,
+      "author": "Tina",
+      "rating": 4,
+      "body": "I like this quick workout after a run- it gives me the extra quick something I need.  you can do anything for  thirty seconds:)",
+      "subject": "good quick workout",
+      "published_at": "2015-08-13",
+      "version": "3.1.2",
+      "country": "USA",
+      "country_id": 1,
+      "country_code": "us",
+      "translated_subject": null,
+      "translated_body": null,
+      "reply_text": null,
+      "reply_date": null,
+      "topics": [
+        "Satisfied Users"
+      ],
+      "topic_ids": [
+        33
+      ],
+      "store_id": "3242342",
+      "device": null,
+      "device_friendly_name": null,
+      "os_version": null,
+      "os_version_friendly_name": null,
+      "sentiment": "positive",
+      "detected_language": "English",
+      "detected_language_id": "en",
+      "permalink_url": "https://appbot.co/apps/:app_id/reviews/1329851",
+      "reply_url": "https://app.appbot.co/apps/:app_id/reviews/1329851/reply",
+      "internal_url": "https://app.appbot.co/apps/:app_id/reviews/1329851/internal"
+    },
+    {
+      "app_id": ":app_id",
+      "app_store_id": "1234",
+      "id": 1329850,
+      "author": "Ceomama",
+      "rating": 5,
+      "body": "I'm a walker but it's hot outside. I liked this because you get cardio in. I can't do planks or push ups yet so it's not a beginner workout. Great though!",
+      "subject": "Great workout",
+      "published_at": "2015-08-13",
+      "version": "3.1.2",
+      "country": "USA",
+      "country_id": 1,
+      "country_code": "us",
+      "translated_subject": null,
+      "translated_body": null,
+      "reply_text": null,
+      "reply_date": null,
+      "topics": [],
+      "topic_ids": [],
+      "store_id": "653332",
+      "device": null,
+      "device_friendly_name": null,
+      "os_version": null,
+      "os_version_friendly_name": null,
+      "sentiment": "positive",
+      "detected_language": "English",
+      "detected_language_id": "en",
+      "permalink_url": "https://appbot.co/apps/:app_id/reviews/1329850",
+      "reply_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/reply",
+      "internal_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/internal"
+    }
+  ],
+  "count": 20,
+  "page": 1,
+  "total_pages": 2,
+  "total_count": 35
+}
+Sentiment
+Sentiment will be positive, neutral, negative, mixed or nil. nil indicates sentiment has not been processed for this comment.
+
+Page Depth Limit
+You can retrieve up to 50,000 reviews using the page parameter. If you need to retrieve more (or all) reviews you can slice and iterate by date using the start and end parameters.
+
+Android OS Version
+os_version for Android provides the API level. See our support site on how to convert the API level to an Android version number.
+
+Review Summary By Date
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/reviews/by_date
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+pad_empty
+boolean
+return items for empty days
+no (defaults to "n")
+force_daily
+boolean
+prevents result from being aggregated over increasingly large time periods based on supplied date range
+no (defaults to "n")
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/reviews/by_date?end=2025-04-23&pad_empty=n&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "published_date": "2015-09-05",
+      "review_count": 74,
+      "average_rating": 4.1
+    },
+    {
+      "published_date": "2015-09-06",
+      "review_count": 85,
+      "average_rating": 4
+    },
+    {
+      "published_date": "2015-09-07",
+      "review_count": 56,
+      "average_rating": 4.2
+    }
+  ],
+  "average_review_count": 71.7,
+  "average_rating": 4.1
+}
+Review Summary By Country
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/reviews/by_country
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/reviews/by_country?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "country_name": "USA",
+      "country_id": 1,
+      "review_count": 212,
+      "average_rating": 4.1
+    },
+    {
+      "country_name": "Bangladesh",
+      "country_id": 2,
+      "review_count": 1,
+      "average_rating": 4
+    },
+    {
+      "country_name": "Russia",
+      "country_id": 3,
+      "review_count": 514,
+      "average_rating": 4.2
+    }
+  ]
+}
+Review Summary By Stars
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/reviews/by_rating
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/reviews/by_rating?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "rating": 1,
+      "count": 2898,
+      "reply_count": 0
+    },
+    {
+      "rating": 2,
+      "count": 481,
+      "reply_count": 0
+    },
+    {
+      "rating": 3,
+      "count": 608,
+      "reply_count": 0
+    },
+    {
+      "rating": 4,
+      "count": 1045,
+      "reply_count": 0
+    },
+    {
+      "rating": 5,
+      "count": 8037,
+      "reply_count": 0
+    }
+  ]
+}
+Review Star Overview
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/reviews/overview
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/reviews/overview?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": {
+    "overall": {
+      "average_rating": 4.5767,
+      "breakdown": [
+        {
+          "rating": 1,
+          "count": 59,
+          "reply_count": 0
+        },
+        {
+          "rating": 2,
+          "count": 36,
+          "reply_count": 0
+        },
+        {
+          "rating": 3,
+          "count": 47,
+          "reply_count": 0
+        },
+        {
+          "rating": 4,
+          "count": 354,
+          "reply_count": 0
+        },
+        {
+          "rating": 5,
+          "count": 1375,
+          "reply_count": 0
+        }
+      ]
+    },
+    "latest_version": {
+      "version": "3.5.2",
+      "average_rating": 3.75,
+      "breakdown": [
+        {
+          "rating": 1,
+          "count": 1,
+          "reply_count": 0
+        },
+        {
+          "rating": 2,
+          "count": 0,
+          "reply_count": 0
+        },
+        {
+          "rating": 3,
+          "count": 0,
+          "reply_count": 0
+        },
+        {
+          "rating": 4,
+          "count": 1,
+          "reply_count": 0
+        },
+        {
+          "rating": 5,
+          "count": 2,
+          "reply_count": 0
+        }
+      ]
+    }
+  }
+}
+Notes
+Current version is only provided where versions are supplied by the applicable app store.
+
+Sentiment Breakdown
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/sentiment/breakdown
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/sentiment/breakdown?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": {
+    "positive": 4728,
+    "negative": 510,
+    "neutral": 304,
+    "mixed": 231
+  }
+}
+Sentiment Timeline
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/sentiment/timeline
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+force_daily
+boolean
+prevents result from being aggregated over increasingly large time periods based on supplied date range
+no (defaults to "n")
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/sentiment/timeline?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "positive": 260,
+      "negative": 28,
+      "neutral": 21,
+      "mixed": 10,
+      "published_at": "2015-07-29"
+    },
+    {
+      "positive": 918,
+      "negative": 88,
+      "neutral": 51,
+      "mixed": 10,
+      "published_at": "2015-07-28"
+    }
+  ]
+}
+Versions
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/versions
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/versions?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "version": "4.5.1",
+      "first_seen": "2015-01-01",
+      "matches": 309,
+      "positive": 278,
+      "negative": 24,
+      "mixed": 10,
+      "ave_rating": 4.5
+    },
+    {
+      "version": "4.6.1",
+      "first_seen": "2015-02-02",
+      "matches": 685,
+      "positive": 604,
+      "negative": 66,
+      "mixed": 9,
+      "ave_rating": 4.4
+    },
+    {
+      "version": "4.7.0",
+      "first_seen": "2015-03-03",
+      "matches": 6,
+      "positive": 4,
+      "negative": 2,
+      "mixed": 1,
+      "ave_rating": 3.8
+    }
+  ]
+}
+Sentiment Grade
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/sentiment/grade
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/sentiment/grade?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": {
+    "grade": "A-",
+    "actions": [
+      "4.5 star apps get more downloads."
+    ]
+  }
+}
+Popular Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/popular
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/popular?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "game",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "love",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 10
+    }
+  ],
+  "count": 50
+}
+Critical Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/critical
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/critical?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "bug",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+Interesting Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/interesting
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/interesting?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "bug",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+Trending Up Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/trending_up
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/trending_up?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "bug",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+Trending Down Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/trending_down
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/trending_down?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "bug",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+New Words
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/words/new
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/words/new?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "word": "bug",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+Phrases
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/phrases
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+phrase_word_count
+integer
+Search for phrases with this number of words.
+Must be one of: 2, 3 or 4.
+yes
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/phrases?end=2025-04-23&phrase_word_count=&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "phrase": "wonderful app",
+      "counter": 1555,
+      "positive": 1368,
+      "negative": 125,
+      "neutral": 62,
+      "mixed": 10
+    },
+    {
+      "word": "login crash",
+      "counter": 747,
+      "positive": 710,
+      "negative": 19,
+      "neutral": 18,
+      "mixed": 8
+    }
+  ],
+  "count": 50
+}
+Topics
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/topics
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+include_all
+boolean
+include custom topics and tags in output, as well as topics
+no (defaults to "n")
+Example Curl (Topics Only):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/topics"
+Example Response (Topics Only):
+{
+  "results": [
+    {
+      "id": 1,
+      "topic_name": "Advertising",
+      "type": "Topic",
+      "matches": 52,
+      "positive": 12,
+      "negative": 31,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 2.4,
+      "owning_user": null
+    },
+    {
+      "id": 2,
+      "topic_name": "Apple Devices",
+      "type": "Topic",
+      "matches": 35,
+      "positive": 18,
+      "negative": 14,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 3.3,
+      "owning_user": null
+    }
+  ],
+  "count": 43
+}
+Example Curl (Including Custom Topics & Tags):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/topics?include_all=y"
+Example Response (Including Custom Topics & Tags):
+{
+  "results": [
+    {
+      "id": 1,
+      "name": "Advertising",
+      "type": "Topic",
+      "matches": 52,
+      "positive": 12,
+      "negative": 31,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 2.4,
+      "owning_user": null
+    },
+    {
+      "id": 2,
+      "name": "My Tag",
+      "type": "Tag",
+      "matches": 35,
+      "positive": 18,
+      "negative": 14,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 3.3,
+      "owning_user": "foo@bar.com"
+    },
+    {
+      "id": 3,
+      "name": "My Custom Topic",
+      "type": "CustompTopic",
+      "matches": 3,
+      "positive": 1,
+      "negative": 1,
+      "neutral": 1,
+      "mixed": 5,
+      "ave_rating": 2.5,
+      "owning_user": "foo@bar.com"
+    }
+  ],
+  "count": 43
+}
+Topics - Fetching Reviews
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/topics/:topic_id/reviews
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+:topic_id
+integer
+ID of topic, from 
+topics
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/topics/1/reviews?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "app_id": ":app_id",
+      "app_store_id": "1234",
+      "id": 1329850,
+      "author": "Ceomama",
+      "rating": 5,
+      "body": "I'm a walker but it's hot outside. I liked this because you get cardio in. I can't do planks or push ups yet so it's not a beginner workout. Great though!",
+      "subject": "Great workout",
+      "published_at": "2015-08-13",
+      "version": "3.1.2",
+      "country": "USA",
+      "country_id": 1,
+      "country_code": "us",
+      "translated_subject": null,
+      "translated_body": null,
+      "reply_text": null,
+      "reply_date": null,
+      "topics": [
+        "Advertising",
+        "Satisfied users"
+      ],
+      "topic_ids": [
+        33,
+        99
+      ],
+      "store_id": "653332",
+      "device": null,
+      "device_friendly_name": null,
+      "os_version": null,
+      "os_version_friendly_name": null,
+      "sentiment": "positive",
+      "detected_language": "English",
+      "detected_language_id": "en",
+      "permalink_url": "https://appbot.co/apps/:app_id/reviews/1329850",
+      "reply_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/reply",
+      "internal_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/internal"
+    }
+  ],
+  "count": 2,
+  "page": 1,
+  "total_count": 2,
+  "total_pages": 1
+}
+Sentiment
+Sentiment will be positive, neutral, negative, mixed or nil. nil indicates sentiment has not been processed for this comment.
+
+Custom Topics
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/custom_topics
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/custom_topics?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "id": 101,
+      "custom_topic_name": "Filter 1",
+      "matches": 52,
+      "positive": 12,
+      "negative": 31,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 2.4,
+      "owning_user": "bob@example.com"
+    },
+    {
+      "id": 102,
+      "custom_topic_name": "Filter 2",
+      "matches": 35,
+      "positive": 18,
+      "negative": 14,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 3.3,
+      "owning_user": "george@example.com"
+    }
+  ],
+  "count": 43
+}
+Custom Topics - Fetching Reviews
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/custom_topics/:custom_topic_id/reviews
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+:custom_topic_id
+integer
+ID of custom topic, from 
+custom topics
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/custom_topics/101/reviews?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "app_id": ":app_id",
+      "app_store_id": "1234",
+      "id": 1329850,
+      "author": "Ceomama",
+      "rating": 5,
+      "body": "I'm a walker but it's hot outside. I liked this because you get cardio in. I can't do planks or push ups yet so it's not a beginner workout. Great though!",
+      "subject": "Great workout",
+      "published_at": "2015-08-13",
+      "version": "3.1.2",
+      "country": "USA",
+      "country_id": 1,
+      "country_code": "us",
+      "translated_subject": null,
+      "translated_body": null,
+      "reply_text": null,
+      "reply_date": null,
+      "topics": [
+        "My Custom Topic"
+      ],
+      "topic_ids": [
+        104
+      ],
+      "store_id": "653332",
+      "device": null,
+      "device_friendly_name": null,
+      "os_version": null,
+      "os_version_friendly_name": null,
+      "sentiment": "positive",
+      "detected_language": "English",
+      "detected_language_id": "en",
+      "permalink_url": "https://appbot.co/apps/:app_id/reviews/1329850",
+      "reply_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/reply",
+      "internal_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/internal"
+    }
+  ],
+  "count": 2,
+  "page": 1,
+  "total_count": 2,
+  "total_pages": 1
+}
+Sentiment
+Sentiment will be positive, neutral, negative, mixed or nil. nil indicates sentiment has not been processed for this comment.
+
+Custom Tags
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/tags
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/tags?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "id": 101,
+      "tag_name": "Tag 1",
+      "matches": 52,
+      "positive": 12,
+      "negative": 31,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 2.4
+    },
+    {
+      "id": 102,
+      "tag_name": "Tag 2",
+      "matches": 35,
+      "positive": 18,
+      "negative": 14,
+      "neutral": 10,
+      "mixed": 8,
+      "ave_rating": 3.3
+    }
+  ],
+  "count": 43
+}
+Custom Tags - Fetching Reviews
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/tags/:tag_id/reviews
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+:tag_id
+integer
+ID of custom tag, from 
+custom tags
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+keyword
+string
+search term to filter results
+no (defaults to no filter)
+country
+integer
+ID of country to filter to, from 
+listing countries
+.
+no (defaults to no filter)
+sentiments
+"+" separated strings
+sentiments to filter results, from positive, neutral, negative and mixed
+no (defaults to no filter)
+dlangs
+"+" separated strings
+detected languages to filter results, from 
+listing detected languages
+.
+no (defaults to no filter)
+version
+version number
+version of app associated with review
+no (defaults to no filter)
+topic
+integer
+topic, custom topic or tag ID to filter to
+no (defaults to no filter)
+Example Curl:
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/tags/53963/reviews?end=2025-04-23&start=2025-04-16"
+Example Response:
+{
+  "results": [
+    {
+      "app_id": ":app_id",
+      "app_store_id": "1234",
+      "id": 1329850,
+      "author": "Ceomama",
+      "rating": 5,
+      "body": "I'm a walker but it's hot outside. I liked this because you get cardio in. I can't do planks or push ups yet so it's not a beginner workout. Great though!",
+      "subject": "Great workout",
+      "published_at": "2015-08-13",
+      "version": "3.1.2",
+      "country": "USA",
+      "country_id": 1,
+      "country_code": "us",
+      "translated_subject": null,
+      "translated_body": null,
+      "reply_text": null,
+      "reply_date": null,
+      "topics": [
+        "My Custom Tag"
+      ],
+      "topic_ids": [
+        105
+      ],
+      "store_id": "653332",
+      "device": null,
+      "device_friendly_name": null,
+      "os_version": null,
+      "os_version_friendly_name": null,
+      "sentiment": "positive",
+      "detected_language": "English",
+      "detected_language_id": "en",
+      "permalink_url": "https://appbot.co/apps/:app_id/reviews/1329850",
+      "reply_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/reply",
+      "internal_url": "https://app.appbot.co/apps/:app_id/reviews/1329850/internal"
+    }
+  ],
+  "count": 2,
+  "page": 1,
+  "total_count": 2,
+  "total_pages": 1
+}
+Sentiment
+Sentiment will be positive, neutral, negative, mixed or nil. nil indicates sentiment has not been processed for this comment.
+
+Ratings - Live
+Provides LIVE information for all ratings and reviews, including per rating breakdown, average and total count information for Apple App Store and Google Play Store apps.
+
+Only current version stats are available for Apple App Store apps (all-time is no longer available and has been deprecated).
+
+Only all-time stats are available for Google Play apps.
+
+Note the version property is deprecated and is always 'current' in all cases.
+
+Apple App Store apps require a specific country code to be provided and will return information for that country, whilst Google Play apps return global information.
+
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/ratings
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+country
+iTunes country code
+Chosen from those here for iOS
+ or
+use the alpha-2 code from here for Google Play
+
+Blank for Google Play will default to US.
+yes (Apple), no (Google Play)
+resolve_to
+self/private/public
+(Google Play Only) Allows you to select between the publicly or privately sourced datasets, provided you have
+linked the appropriate account
+.
+no (defaults to self)
+Example Curl (Apple):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings?country=US"
+Example Response (Apple):
+{
+  "all_time": null,
+  "current_version": {
+    "created_at": "2024-07-04T05:39:51.945+00:00",
+    "count": 4596,
+    "average": 4.887510879025239,
+    "breakdown": {
+      "5": 4301,
+      "4": 178,
+      "3": 56,
+      "2": 17,
+      "1": 44
+    },
+    "version": "current"
+  }
+}
+Example Curl (Google Play):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings"
+Example Response (Google Play):
+{
+  "all_time": {
+    "created_at": "2024-07-04T05:43:42.121+00:00",
+    "count": 118239,
+    "average": 3.7918606,
+    "breakdown": {
+      "5": 68949,
+      "4": 12095,
+      "3": 5493,
+      "2": 7007,
+      "1": 24672
+    },
+    "version": "current"
+  },
+  "current_version": null
+}
+Ratings - Historical (Ratings Over Time)
+Provides ratings data collected by Appbot periodically within the given date range, including per rating breakdown, average and total count information for Apple App Store and Google Play Store apps.
+
+Only statistics for current version are available for Apple App Store apps, while only all-time information is available for Google Play apps.
+
+Note the version property is deprecated and is always 'current'.
+
+Apple App Store apps allow a specific country code to be provided and will return information for that country (or the country code can be left out for the summation of all countries). Google Play apps return only global information.
+
+Note: Data returned by the app stores can occasionally vary dramatically. Unlike like Appbot UI, this API does not filter these anomalies.
+
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/ratings/historical
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+country
+iTunes or Google Play
+country code
+Chosen from those here for iOS
+ or
+use the alpha-2 code from here for Google Play
+
+Blank for iOS returns the sum of all countries.
+Blank for Google Play will default to US.
+no
+start
+date
+the start date (yyyy-mm-dd)
+no (defaults to 90 days ago)
+end
+date
+the end date (yyyy-mm-dd)
+no (defaults to today)
+resolve_to
+self/private/public
+(Google Play Only) Allows you to select between the publicly or privately sourced datasets, provided you have
+linked the appropriate account
+.
+no (defaults to self)
+Example Curl (Apple):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings/historical?country=US&end=2025-04-23&start=2025-04-16"
+Example Response (Apple):
+{
+  "all_time": [],
+  "current_version": [
+    {
+      "created_at": "2017-01-01T01:30:00.000Z",
+      "count": 150,
+      "average": 3.66666667,
+      "breakdown": {
+        "1": 10,
+        "2": 20,
+        "3": 30,
+        "4": 40,
+        "5": 50
+      },
+      "version": "current"
+    },
+    {
+      "created_at": "2017-01-02T01:30:00.000Z",
+      "count": 160,
+      "average": 3.625,
+      "breakdown": {
+        "1": 12,
+        "2": 22,
+        "3": 32,
+        "4": 42,
+        "5": 52
+      },
+      "version": "current"
+    }
+  ]
+}
+Example Curl (Google Play):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings/historical?end=2025-04-23&start=2025-04-16"
+Example Response (Google Play):
+{
+  "all_time": [
+    {
+      "created_at": "2017-01-01T01:30:00.000Z",
+      "count": 1500,
+      "average": 3.66666667,
+      "breakdown": {
+        "1": 100,
+        "2": 200,
+        "3": 300,
+        "4": 400,
+        "5": 500
+      },
+      "version": "current"
+    },
+    {
+      "created_at": "2017-01-02T01:30:00.000Z",
+      "count": 1600,
+      "average": 3.625,
+      "breakdown": {
+        "1": 120,
+        "2": 220,
+        "3": 320,
+        "4": 420,
+        "5": 520
+      },
+      "version": "current"
+    }
+  ],
+  "current_version": null
+}
+Ratings - Bulk
+Provides all ratings data collected by Appbot periodically from the given start date.
+
+All data points are returned, including all country summaries (country property is nil).
+
+Note the version property is deprecated and is always 'current'.
+
+This endpoint is designed for customers who wish to periodically export all ratings data collected for a given app, and is only recommended for advanced users.
+
+Requests after first request must include all the same query parameters as the first, with the addition of the next_page_token parameter.
+
+Use the ratings_countries endpoint to resolve country_id values returned by this endpoint.
+
+URL:
+https://api.appbot.co/api/v2/apps/:app_id/ratings/bulk
+
+URL Parameters:
+name
+type
+description
+required
+:app_id
+integer
+ID of application, from 
+your apps
+.
+yes
+Query String Parameters:
+name
+type
+description
+required
+start
+datetime
+the start datetime (ISO8601 format)
+yes
+next_page_token
+string
+token supplied by previous request to the same endpoint (expires in 10 minutes)
+after first page
+resolve_to
+self/private/public
+(Google Play Only) Allows you to select between the publicly or privately sourced datasets, provided you have
+linked the appropriate account
+.
+no (defaults to self)
+page_size
+integer
+number of datapoints per page (max 1000)
+no (defaults to 20)
+Example Curl (First Page):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings/bulk?page_size=500&start=2025-04-16"
+Example Response (First Page):
+{
+  "count": 500,
+  "next_page_token": "6DMb6zPIvnUBWQCjxZ8AOCZuLBZyqox4",
+  "results": [
+    {
+      "avg": "0.5",
+      "country": "United Kingdom",
+      "country_id": 1,
+      "country_code": "UK",
+      "created_at": "2055-05-05T16:55:00.000Z",
+      "star_1": 1,
+      "star_2": 2,
+      "star_3": 3,
+      "star_4": 4,
+      "star_5": 5,
+      "total": 100,
+      "version": "current"
+    },
+    {
+      "avg": "0.5",
+      "country": "United Kingdom",
+      "country_id": 1,
+      "country_code": "UK",
+      "created_at": "2055-05-06T16:55:00.000Z",
+      "star_1": 1,
+      "star_2": 2,
+      "star_3": 3,
+      "star_4": 4,
+      "star_5": 5,
+      "total": 100,
+      "version": "current"
+    }
+  ]
+}
+Example Curl (Final Page):
+curl -u "ZLVEVRMVIO:API_PASSWORD" "https://api.appbot.co/api/v2/apps/933184/ratings/bulk?next_page_token=6DMb6zPIvnUBWQCjxZ8AOCZuLBZyqox4&page_size=500&start=2025-04-16"
+Example Response (Final Page):
+{
+  "count": 243,
+  "next_page_token": null,
+  "results": [
+    {
+      "avg": "0.5",
+      "country": "United Kingdom",
+      "country_id": 1,
+      "country_code": "UK",
+      "created_at": "2055-05-10T16:55:00.000Z",
+      "star_1": 1,
+      "star_2": 2,
+      "star_3": 3,
+      "star_4": 4,
+      "star_5": 5,
+      "total": 100,
+      "version": "current"
+    },
+    {
+      "avg": "0.5",
+      "country": "United Kingdom",
+      "country_id": 1,
+      "country_code": "UK",
+      "created_at": "2055-05-11T16:55:00.000Z",
+      "star_1": 1,
+      "star_2": 2,
+      "star_3": 3,
+      "star_4": 4,
+      "star_5": 5,
+      "total": 100,
+      "version": "current"
+    }
+  ]
+}

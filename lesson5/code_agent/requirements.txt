@@ -1,0 +1,10 @@
+openai>=1.12.0
+python-dotenv>=1.0.0
+pandas>=2.2.0
+numpy>=1.26.0
+matplotlib>=3.8.0 
+seaborn
+scipy
+statsmodels
+plotly
+tabulate

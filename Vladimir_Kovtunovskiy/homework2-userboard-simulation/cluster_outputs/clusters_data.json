@@ -1,0 +1,321 @@
+[
+  {
+    "cluster_id": 0,
+    "count": 7803,
+    "avg_sentiment": 0.534,
+    "sentiment_dist": {
+      "positive": 6429,
+      "negative": 987,
+      "neutral": 387
+    },
+    "keywords": [
+      "love spotify",
+      "premium",
+      "like",
+      "ads",
+      "use",
+      "really",
+      "want",
+      "spotify best",
+      "better",
+      "using"
+    ],
+    "samples": [
+      "I'm new to cellphone use. Grandson introduced me to spotify. So far,so good. Good selection of music choices.",
+      "Deep&plural, im committed to my audio pleasures spotify delivers. Chockles....keep it locked..n..",
+      "I'd be happier if Spotify didn't suggest AWFUL songs in all my playlists for a whole week. I listened to ONE SONG that was actually on my playlist. No matter how many times you suggest me traitor by Olivia Rodrigo, It's hidden in my list for a reason. I DON'T WANT TO HEAR IT.",
+      "This app is so nice l try every music app but on any app there is nothing related to kpop but in spotify yes there is every kpop band I can listen for free its really nice because I am a kpop fan and a real army also so this app is really very nice I love this app. Thanks for read my review Saraghe💜💜",
+      "I absolutely love Spotify it is better then most music apps in my opinion and it's easy to use the only thing that is a down fall for me is that when the ads at the start of pressing shuffle say you can listen up to 30mins of music with No ads then 5mi s later there is an ad😑"
+    ]
+  },
+  {
+    "cluster_id": 1,
+    "count": 3282,
+    "avg_sentiment": 0.008,
+    "sentiment_dist": {
+      "negative": 1521,
+      "positive": 1474,
+      "neutral": 287
+    },
+    "keywords": [
+      "offline",
+      "downloaded",
+      "download",
+      "internet",
+      "premium",
+      "connection",
+      "fix",
+      "data",
+      "phone",
+      "wifi"
+    ],
+    "samples": [
+      "The app is so glitchy on Android that it won't let me play any music on my phone. It's been this way for 2 months now, and at the worst time (while I was on a road trip and needed tunes). And no customer support number to help me fix it...What am I paying for exactly? Going to try to get refunded, maybe I'll sign up again if they fix the app.",
+      "I have a premium account but I couldn't play my downloaded playlist everytime I go offline.",
+      "The downloaded songs are not playable when you went offline. Then, why am I even paying the subscription?!",
+      "This app is fine when i play it then i cant listen to the song that i WANTED i have to buy the premium. (I WONT PAY)",
+      "Constantly getting \"No internet connection\" errors when I have internet (this is the only app that does it). Shuffle is completely broken. And \"random\" isn't supposed to be the same song 3+ times in a row..."
+    ]
+  },
+  {
+    "cluster_id": 2,
+    "count": 5624,
+    "avg_sentiment": 0.586,
+    "sentiment_dist": {
+      "positive": 5051,
+      "neutral": 315,
+      "negative": 258
+    },
+    "keywords": [
+      "easy",
+      "selection",
+      "quality",
+      "like",
+      "great music",
+      "sound",
+      "want",
+      "easy use",
+      "use",
+      "good music"
+    ],
+    "samples": [
+      "Nice music so refreshing to hear some songs!",
+      "Crystal clear sound! I can hear every detail of the music! Love it! 💞",
+      "The experience of listening what one wants and explore as the soul wishes to have. This is what I got.",
+      "Spot on great choice of music may be put some 60s 70s 80s on I can't find them For someone as rubbish with tex it's easy",
+      "I enjoyed listening to the songs even though my cignal was weak,it never stops playing the songs"
+    ]
+  },
+  {
+    "cluster_id": 3,
+    "count": 4781,
+    "avg_sentiment": 0.166,
+    "sentiment_dist": {
+      "positive": 2709,
+      "negative": 1543,
+      "neutral": 529
+    },
+    "keywords": [
+      "ads",
+      "premium",
+      "like",
+      "annoying",
+      "free",
+      "app ads",
+      "minutes",
+      "commercials",
+      "ads songs",
+      "really"
+    ],
+    "samples": [
+      "Can you reduce the amount of ads pls , the ads are coming too much like 2 songs later a ad is coming , pls reduce it , it's really trouble to listen to all the ads .",
+      "I love to hear Ads 😌❤its so SATISFYING.... But Sometimes musics play and INTERRUPT the Ads 😔....i request to Fixed this Problem.... So i enjoy ads Peacefully.... Great App🙏😊",
+      "Awful. Keeps playing songs that are not on my playlist and buggy. Ads are just a hassle and stupid",
+      "Everything in this app I'm good but there's alot of ads spamming like every 2 songs there's an ad, you earn by ads but it's not good if there's too much",
+      "Free awesome at least with ads it is free"
+    ]
+  },
+  {
+    "cluster_id": 4,
+    "count": 5710,
+    "avg_sentiment": 0.65,
+    "sentiment_dist": {
+      "positive": 5301,
+      "negative": 229,
+      "neutral": 180
+    },
+    "keywords": [
+      "music app",
+      "best music",
+      "best app",
+      "app music",
+      "streaming",
+      "love app",
+      "good app",
+      "great app",
+      "listening",
+      "like"
+    ],
+    "samples": [
+      "Good music app and I love you don't need to have premium to listen I think you might need your phone on but you guys can help me with that, so I like this one more then the others I've used this year. And pls give free mode more options.",
+      "Best music app out there. Love it!",
+      "Such a wonderful app, but it contains adds after each song. This is the only demerit in this app. Other features are awesome.",
+      "Its very very nice music app I really enjoying it 🤩🤩",
+      "This app is soo good. I love the quality of the songs"
+    ]
+  },
+  {
+    "cluster_id": 5,
+    "count": 5969,
+    "avg_sentiment": -0.019,
+    "sentiment_dist": {
+      "negative": 2837,
+      "positive": 2591,
+      "neutral": 541
+    },
+    "keywords": [
+      "playing",
+      "update",
+      "pause",
+      "bar",
+      "stop",
+      "keeps",
+      "stops",
+      "bluetooth",
+      "fix",
+      "randomly"
+    ],
+    "samples": [
+      "I use it for a while but it still don't know what music I like. It just spams my account with the \"popular\" songs. And I don't think there's just USA music in the world. The app is not sleeping but keeps stopping..",
+      "A lot of bugs Sometimes it's incredibly slow This past days the song being played does not appear at the bottom like it usually does. I have to force stop the app and open it again for it to start working properly",
+      "When I'm conected to my TV or ant other device and I'm controlling it with my phone, it tends to silence the song for some parts and even restart it. The app closes when I have music playing in the background and will often kick me out of sessions if I'm not in the app. This all happens e en though I have it so that it has no restrictions for background usage we",
+      "After recent update can't play a song when play app crash kindly slove",
+      "Awful, I keep having to uninstall the whole app jus so it will stop playing. The pause button works once or twice then stays on play. There's some great stuff on the app but the app itself is soooo bad and glitchy"
+    ]
+  },
+  {
+    "cluster_id": 6,
+    "count": 4653,
+    "avg_sentiment": 0.241,
+    "sentiment_dist": {
+      "positive": 2889,
+      "negative": 1490,
+      "neutral": 274
+    },
+    "keywords": [
+      "podcasts",
+      "podcast",
+      "music podcasts",
+      "rogan",
+      "joe",
+      "music podcast",
+      "joe rogan",
+      "listening",
+      "use",
+      "like"
+    ],
+    "samples": [
+      "Turns out Spotify leadership has a spine after all. Principles matter these days, and I refuse to give my patronage to communists. Spotify stood for free speech by refusing to remove voices, and that counts for something. Wish they would go all in, refuse to put propaganda labels on content, but I understand they do have to protect their business on these commie app stores. Overall, good job Spotify.",
+      "The play portion of spotify just disappears on a regular basis. The only way i can get it to return is to shut down the app and restart it. I've uninstalled and reinstalled the app and the issue comes back immediately. Recently songs and podcasts also just stop playing. I have to go in and hit play to get them going again. That is if the play section is working. If not, it's restart the app. System stability has been a real issue lately.",
+      "I love that I can use this app for music and podcasts on my phone or my laptop. So easy to use.",
+      "Great. Not impressed with ads built in to podcasts though. I pay premium to avoid these intervals",
+      "Green 'Play' button is constantly breaking, preventing me from playing podcasts. This frequently requires me to reinstall the app. I'm unwilling to pay for an app which functions poorly"
+    ]
+  },
+  {
+    "cluster_id": 7,
+    "count": 7006,
+    "avg_sentiment": 0.175,
+    "sentiment_dist": {
+      "positive": 3799,
+      "negative": 2210,
+      "neutral": 997
+    },
+    "keywords": [
+      "premium",
+      "use",
+      "easy",
+      "update",
+      "easy use",
+      "account",
+      "log",
+      "fix",
+      "working",
+      "work"
+    ],
+    "samples": [
+      "I love this app! One downside - the free version doesn't allow you to pick or reshuffle, and the Premium is stupid expensive. I can't afford ten bucks a month. Oh well. I'll deal with that. Other than those two things, it's awesome!",
+      "Lost of small bugs and glitches, the app is almost useless to use without premium and some features are hard to use. Even with premium it's quite bad. When I started using the app years ago I would've gave it a 4 - 5 star rating as you could use the free version of the app much more freely, there weren't many bugs and the app was overall just better.",
+      "Would be great if you guys put a tiny bit of effort into making this somewhat useable, it's a buggy mess",
+      "Works well across devices and connects easily.",
+      "App not working I literally cannot open this app and have to uninstall and reinstall it again and its bad don't know why??"
+    ]
+  },
+  {
+    "cluster_id": 8,
+    "count": 1156,
+    "avg_sentiment": 0.41,
+    "sentiment_dist": {
+      "positive": 851,
+      "negative": 177,
+      "neutral": 128
+    },
+    "keywords": [
+      "lyrics",
+      "lyrics songs",
+      "language",
+      "english",
+      "songs lyrics",
+      "like",
+      "feature",
+      "available",
+      "lyrics song",
+      "lyrics feature"
+    ],
+    "samples": [
+      "Great service, love the lyrics feature on some songs but wow what a clunky POS of an app.",
+      "Every thing is perfect but please show the lyrics in language in which the song is and not any other language,",
+      "Its best app for music I used to listen old song of india",
+      "I like it . But here is one issue . I just want eng subtitles under the Korean or Chinese song lyrics. Eng subtitles are available in Samsung phone . So please, I'll be thankful if you clear this issue .",
+      "The sounds and lyrics of songs are very enhanced. Kudos and never relent on improving"
+    ]
+  },
+  {
+    "cluster_id": 9,
+    "count": 9140,
+    "avg_sentiment": 0.19,
+    "sentiment_dist": {
+      "positive": 5462,
+      "negative": 3032,
+      "neutral": 646
+    },
+    "keywords": [
+      "playlist",
+      "want",
+      "like",
+      "shuffle",
+      "premium",
+      "add",
+      "playlists",
+      "plays",
+      "random",
+      "play song"
+    ],
+    "samples": [
+      "Remove the like/unlike button from easy mistouchable places please!! I don't like to unlike songs by mistake when I'm scrolling through my songs or when I skips songs on the lock screen",
+      "This app sucks I can't listen to a single song I want to hear I'm forced to listen to songs I hate what are useless app.",
+      "Why you let the premium only Play any song please 🙏 let the premium And not premium play any song But really this a problem I hate this Application after this update",
+      "All it plays is we add songs worst music app ever youtubes better fix this plz :(",
+      "I am very mad about the new update, everytime i use a playlist after the first song is done it plays a song that not even in the playlist :["
+    ]
+  },
+  {
+    "cluster_id": 10,
+    "count": 5900,
+    "avg_sentiment": 0.027,
+    "sentiment_dist": {
+      "positive": 2797,
+      "negative": 2662,
+      "neutral": 441
+    },
+    "keywords": [
+      "fix",
+      "update",
+      "playing",
+      "premium",
+      "phone",
+      "account",
+      "time",
+      "playlist",
+      "problem",
+      "like"
+    ],
+    "samples": [
+      "I love using Spotify but for the last 2 weeks, I haven't been able to play more than a minute of a song before the app crashes. Had to uninstall",
+      "Beta worst option I see Spotify updated yesterday, that would explain why it doesn't work today. If this wasn't so common, Spotify would be great. Instead it is the best of the equally terrible options.",
+      "I have been a premium subscriber since 2013 as many people are saying the last 6 to 8 months have been absolutely rubbish. I work in very remote locations so you think when I download music I should be able to access my library pfffftttttt not Spotify sometimes taking upto 5 times. I have gone into setting delete catch and data then app and re installing what a joke not happy Spotify please fix or I'm cancelling and deleting app for good",
+      "My spotify have problem and then im uninstall it and reinstall it to make it work properly but im stuck 30 minutes at loading after i tap at login with fb and im trying to clear cache ,data ,uninstall and reinstall it back it happen again but more worst after i tal login with fb and the app just going black",
+      "Please fix the play situation. It's not showing the medis controls on lock screens or even in Spotify app. The only way for me to stop the music is by completely closing the app."
+    ]
+  }
+]

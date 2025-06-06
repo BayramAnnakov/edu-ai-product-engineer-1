@@ -1,0 +1,16 @@
+numpy
+pandas
+torch
+umap-learn
+nltk
+rich
+sentence-transformers
+scikit-learn
+langchain
+langchain-core
+langchain-openai
+langchain-community
+langgraph
+python-dotenv
+tenacity
+openai

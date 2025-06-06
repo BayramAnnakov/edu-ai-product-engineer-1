@@ -1,0 +1,29 @@
+{
+  "features": [
+    {
+      "topic": "Research on whether large images in Bild.de articles are beneficial or should be made smaller",
+      "core_questions": [
+        "What is your impression of the current image sizes on Bild.de articles?",
+        "How do large images impact your reading experience on news websites?",
+        "Would smaller images improve page loading and overall user experience?"
+      ]
+    },
+    {
+      "topic": "Implement a search function where users can type in what they are looking for",
+      "core_questions": [
+        "What are your first thoughts or feelings about having a search function where you can type in what you're looking for?",
+        "Can you describe specific situations or tasks where you think this search feature would be particularly useful for you?",
+        "Do you have any concerns or reservations about using a search function like this, or anything you think might not work well for you?"
+      ]
+    },
+    {
+      "topic": "Eliminate shipping costs for Plus members",
+      "core_questions": [
+        "What are your initial thoughts on the idea of eliminating shipping costs for Plus members?",
+        "How do you think having no shipping costs would change the way you use the service?",
+        "Do you have any concerns or reservations about removing shipping costs for Plus members?"
+      ]
+    }
+  ],
+  "max_followups": 2
+}

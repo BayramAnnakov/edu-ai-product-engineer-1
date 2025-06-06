@@ -1,9 +1,5 @@
-nltk
-openai
-pandas
-numpy
-rouge
-python-dotenv
-matplotlib
-tqdm
-scipy
+python-dotenv==1.0.0
+pandas==2.1.4
+openai>=1.76.0
+openai-agents==0.0.13
+asyncio==3.4.3

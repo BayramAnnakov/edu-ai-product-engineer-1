@@ -1,88 +1,78 @@
-# Text Analysis Agent
+# Product Review Analysis System
 
-## Project Overview
-This project implements a comparative text analysis system that evaluates two different approaches to text summarization:
-1. **Extractive Summarization**: Uses NLTK and TextRank algorithm to select key sentences from the original text
-2. **Abstractive Summarization**: Employs OpenAI's GPT model to generate paraphrased summaries
+## Overview
+This project is an AI-powered system for analyzing product reviews using OpenAI's GPT models. It processes customer reviews to generate actionable insights, including feature suggestions and user personas, and simulates user research sessions.
 
-The system processes text data from CSV files and generates comprehensive reports comparing these approaches based on:
-- Summary lengths
-- Execution times
-- ROUGE metrics for summary quality
-- Visualization of comparative metrics
+## Features
+- Loads and validates product reviews from CSV files
+- Identifies key user pain points and generates feature suggestions
+- Creates detailed user personas based on review analysis
+- Simulates interactive user research sessions
+- Generates comprehensive summaries with insights and recommendations
 
-## Tools and Technologies Used
+## Project Structure
+```
+├── data/               # Data storage directory
+├── output/            # Output files directory
+├── src/               # Source code
+│   ├── __init__.py
+│   ├── agent_persona_creator.py   # Persona generation logic
+│   ├── data_loader.py            # CSV loading and validation
+│   ├── llm_client.py            # OpenAI API interaction
+│   ├── logger_config.py         # Logging configuration
+│   ├── main.py                 # Main application entry
+│   ├── product_manager_agent.py # Product analysis logic
+│   └── reviews_preparer.py     # Review data preparation
+├── tests/             # Test files
+├── README.md          # Project documentation
+├── requirements.txt   # Project dependencies
+└── Reviews.csv       # Sample review data
+```
 
-### Core Libraries
-- **NLTK**: Natural Language Toolkit for text processing and extractive summarization
-  - Used for tokenization, stop words removal, and text preprocessing
-  - Implements TextRank algorithm for key sentence extraction
-- **OpenAI API**: For abstractive summarization using GPT-3.5
-  - Provides high-quality paraphrased summaries
-  - Offers consistent and coherent output
+## Requirements
+- Python 3.8+
+- OpenAI API key
+- Required Python packages (see requirements.txt)
 
-### Analysis and Processing
-- **NetworkX**: Implementation of TextRank algorithm and graph-based text analysis
-- **NumPy**: Efficient numerical computations and matrix operations
-- **Pandas**: CSV file handling and data manipulation
-- **ROUGE**: Evaluation metrics for summary quality
+## Setup
+1. Clone the repository
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Create a .env file with your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   ```
 
-### Visualization and Output
-- **Matplotlib**: Data visualization and metric comparisons
-- **JSON**: Structured output format for analysis results
-- **tqdm**: Progress tracking for batch processing
-
-## Setup Instructions
-
-1. Clone the repository and navigate to the project directory
-
-2. Install dependencies:
+## Usage
+Run the analysis with:
 ```bash
-pip install -r requirements.txt
+python -m src.main --csv-path path/to/your/reviews.csv
 ```
 
-3. Configure OpenAI API:
-   - Rename `.env` to `.env`
-   - Add your OpenAI API key:
-```
-OPENAI_API_KEY=your_api_key_here
-```
-
-4. Prepare your input data:
-   - Use a CSV file with a text column
-   - Default configuration expects a column named 'Text'
-
-5. Run the analysis:
-```bash
-python main.py csv your_file.csv --text-column Text --output analysis.json --visualize
-```
-
-### Command Line Arguments
-- `csv`: Input format (currently only CSV is supported)
-- `your_file.csv`: Path to input CSV file
-- `--text-column`: Name of the column containing text to analyze
-- `--output`: Path for the output JSON file
-- `--visualize`: (Optional) Generate visualization charts
+The system will:
+1. Load and validate the review data
+2. Generate feature suggestions based on user pain points
+3. Create user personas from the reviews
+4. Simulate a user research session
+5. Save the results to the output directory
 
 ## Output
-The program generates:
-1. **analysis.json**: Contains detailed metrics including:
-   - Original text and summary lengths
-   - Execution times for both methods
-   - ROUGE scores comparing summary quality
-   - Individual results for each processed text
-   - Average metrics across all processed texts
+The system generates:
+- Console logs with detailed analysis progress
+- A summary.txt file in the output directory containing:
+  - Key feature suggestions
+  - User personas
+  - User research session insights
+  - Recommendations for improvement
 
-2. **analysis_visualization.png**: Visual representation of:
-   - Text length comparisons
-   - Execution time comparisons
-   - ROUGE scores
-
-## Performance Insights
-Based on initial analysis:
-- Extractive summarization is significantly faster (~0.006s vs ~1.14s)
-- Abstractive summaries tend to be longer and more detailed
-- ROUGE scores indicate moderate overlap between both approaches
-- Each method has its strengths:
-  - Extractive: Speed and original text preservation
-  - Abstractive: Coherence and paraphrasing ability
+## Logging
+Logs are saved to:
+- Console output for immediate feedback
+- Daily log files in the output directory (format: app_YYYYMMDD.log)
