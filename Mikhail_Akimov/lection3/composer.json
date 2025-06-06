@@ -1,0 +1,26 @@
+{
+    "name": "mikhail/feature-discussion",
+    "description": "Feature discussion application with AI agents",
+    "type": "project",
+    "require": {
+        "php": "^8.1",
+        "openai-php/client": "^v0.8.0",
+        "inspector-apm/neuron-ai": "^1.9",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mikhail Akimov"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
